@@ -30,15 +30,13 @@ module.exports.detail=async(req,res)=>{
             deleted:false,
             slug:req.params.slug
         })
-        const articles =await Article.find({
+        const articlesFeatured =await Article.find({
             deleted: false,
-        }).sort({
-           ' createdBy.createdAt': 'desc'
-        }).limit(6)
-        const slug=req.params.slug
+            featured:"1"
+        }).select('title shortDescription thumbnail slug createdBy').limit(6).select('title shortDescription thumbnail slug createdBy')
         res.render('client/pages/articles/detail',{
             title:article.title,
-            articles:articles,
+            articles:articlesFeatured,
             article:article
         })
     } catch (error) {
