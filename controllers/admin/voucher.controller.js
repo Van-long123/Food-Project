@@ -40,3 +40,18 @@ module.exports.index=async (req,res)=>{
         pagination:objectPagination
     })
 }
+
+module.exports.detail=async(req, res) => {
+   
+    try {
+        const voucher=await Voucher.findOne({_id:req.params.id,deleted:false})
+        res.render(`admin/pages/vouchers/detail`,{
+            title:voucher.name,
+            voucher:voucher
+        })
+    } catch (error) {
+        req.flash('error','Khuyến mãi ko tồn tại')
+        res.redirect('back')
+    }
+    
+}
