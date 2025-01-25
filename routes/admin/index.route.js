@@ -11,6 +11,7 @@ const articleRouter=require('./article.route')
 const articleCategoryRouter=require('./articles-category.route')
 const myAccountRouter=require('./my-account.route')
 const settingRouter=require('./setting.route')
+const voucherRouter=require('./voucher.route')
 const authMiddleware=require('../../middleware/admin/auth.middleware')
 module.exports=(app)=>{
     const PATH_ADMIN=systemConfig.prefixAdmin
@@ -27,5 +28,5 @@ module.exports=(app)=>{
     app.use(PATH_ADMIN+'/auth',authRouter)    
     app.use(PATH_ADMIN+'/my-account',authMiddleware.requireAuth,myAccountRouter)
     app.use(PATH_ADMIN+'/settings',authMiddleware.requireAuth,settingRouter)
-
+    app.use(PATH_ADMIN+'/vouchers',authMiddleware.requireAuth,voucherRouter)
 }

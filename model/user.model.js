@@ -4,6 +4,16 @@ const userSchema=new mongoose.Schema({
     _id: { type: String,default: () => new mongoose.Types.ObjectId().toHexString(), },
     fullname:String,
     email:String,
+    vouchers:[
+        {
+            voucherId:String,
+            usedAt: Date, 
+            status: {
+                type: String,
+                default:'unused'
+            }
+        }
+    ],
     password:String,
     address:String,
     typeLogin:{

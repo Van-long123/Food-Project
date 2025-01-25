@@ -17,6 +17,10 @@ section#sidebar
                 a(href=`${prefixAdmin}/products`)
                     <i class='bx bxl-product-hunt'></i>
                     span.text Danh sách sản phẩm
+        li
+            a(href=`${prefixAdmin}/vouchers`)
+                <i class='bx bxl-product-hunt'></i>
+                span.text Khuyến mãi
         if(role.permissions.includes("orders_view"))
             li
                 a(href=`${prefixAdmin}/orders`)
