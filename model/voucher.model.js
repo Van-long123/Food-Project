@@ -5,10 +5,10 @@ const voucherSchema=new mongoose.Schema({
     },
     name:String,
     description:String,
-    expireAt: {
-        type: Date,
-        expires:0
-    },
+    // expireAt: {
+    //     type: Date,
+    //     expires:0
+    // },
     discountType:String,
     discountValue: Number,
     minOrderValue: Number ,

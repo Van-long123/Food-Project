@@ -55,3 +55,45 @@ module.exports.detail=async(req, res) => {
     }
     
 }
+
+module.exports.changeStatus=async(req, res) => {
+    const status=req.params.status
+    const id=req.params.id
+    await Voucher.updateOne({
+        _id:id
+    },{
+        status:status
+    })
+    req.flash('success', 'Cập nhật trạng thái khuyến mãi thành công');
+    res.redirect('back');
+}
+module.exports.deleteItem=async(req, res) => {
+    const id=req.params.id
+    await Voucher.updateOne({
+        _id:id
+    },{
+        deleted:true
+    })
+    req.flash('success', 'Đã xóa khuyến mãi thành công');
+
+    res.redirect('back');
+}
+module.exports.changeMulti=async(req, res) => {
+    const type=req.body.type
+    const ids=req.body.ids.split(', ')
+    switch(type){
+        case 'active':
+            await Voucher.updateMany({_id:{$in:ids}},{status:"active"})
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} khuyến mãi`);
+            break;
+        case 'inactive':
+            await Voucher.updateMany({_id:{$in:ids}},{status:"inactive"})
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} khuyến mãi`);
+            break;
+        case 'delete-all':
+            await Voucher.updateMany({_id:{$in:ids}},{deleted:true})
+            req.flash('success', `Xóa thành công ${ids.length} khuyến mãi`);
+            break;
+    }
+    res.redirect('back');
+}
