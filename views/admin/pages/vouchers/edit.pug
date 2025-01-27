@@ -29,6 +29,15 @@ block main
             name="code",
             value=voucher.code
             )
+        div(class="form-group")
+            label(for="description") Mô tả
+            input(
+            type="text",
+            class="form-control",
+            id="description",
+            name="description",
+            value=voucher.description
+            )
         .container-fluid    
             .row 
                 .col-4

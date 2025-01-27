@@ -155,6 +155,7 @@ module.exports.editPatch=async(req, res) => {
         const dataVoucher={
             name: req.body.name,
             code: req.body.code,
+            description: req.body.description,
             discountType: req.body.discountType,
             discountValue: parseInt(req.body.discountValue),
             quantity: parseInt(req.body.quantity),
