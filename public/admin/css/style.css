@@ -746,3 +746,8 @@ select[name="status"] option:hover {
     background-color: #007BFF;
     color: #fff;
 }
+
+
+.startValidate{
+	color: #DB504A;
+}

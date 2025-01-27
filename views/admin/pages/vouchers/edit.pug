@@ -10,13 +10,14 @@ block main
         method="POST"
     )
         div(class="form-group")
-            label(for="name") Tiêu đề giảm giá
+            label(for="name") Tiêu đề giảm giá <span class="startValidate">*</span>
             input(
             type="text",
             class="form-control",
             id="name",
             name="name",
             value=voucher.name
+            required
             )
         div(class="form-group")
             div(class='d-flex')
@@ -30,13 +31,14 @@ block main
             value=voucher.code
             )
         div(class="form-group")
-            label(for="description") Mô tả
+            label(for="description") Mô tả <span class="startValidate">*</span>
             input(
             type="text",
             class="form-control",
             id="description",
             name="description",
             value=voucher.description
+            required
             )
         .container-fluid    
             .row 
