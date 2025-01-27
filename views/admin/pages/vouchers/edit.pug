@@ -2,10 +2,10 @@ extend ../../layouts/default
 include ../../mixins/alert.pug
 include ../../mixins/select-tree.pug
 block main 
-    h1 Thêm mới khuyến mãi
+    h1 Cập nhật khuyến mãi
     +alert-error(5000) 
     form(
-        action=`${prefixAdmin}/vouchers/create`,
+        action=`${prefixAdmin}/vouchers/edit/${voucher.id}?_method=PATCH`,
         id="form-create-product",
         method="POST"
     )
@@ -16,6 +16,7 @@ block main
             class="form-control",
             id="name",
             name="name",
+            value=voucher.name
             )
         div(class="form-group")
             div(class='d-flex')
@@ -26,6 +27,7 @@ block main
             class="form-control",
             id="code",
             name="code",
+            value=voucher.code
             )
         .container-fluid    
             .row 
@@ -33,9 +35,8 @@ block main
                     div(class="form-group")
                         label(for="discountType") Phương thức giảm giá
                         select(name="discountType" class="form-control",)
-                            //- 
-                            option(value="amount") Số tiền 
-                            option(value="percent") Phần trăm
+                            option(value="amount" selected=(voucher.discountType=='amount' ? true :false)) Số tiền 
+                            option(value="percent" selected=(voucher.discountType=='percent' ? true :false)) Phần trăm
                 .col-4
                     div(class="form-group")
                         label(for="discountValue") % Giảm giá
@@ -44,8 +45,8 @@ block main
                             class="form-control",
                             id="discountValue",
                             name="discountValue",
-                            value="0",
                             min="0"
+                            value=voucher.discountValue
                         )
                 .col-4
                     div(class="form-group")
@@ -56,8 +57,8 @@ block main
                             class="form-control",
                             id="quantity",
                             name="quantity",
-                            value="0",
                             min="0"
+                            value=voucher.quantity
                         )
 
             //- usageLimitPerUser số lần voucher có thể dùng hỏi chat cách để biết được user dùng voucher đó được bao nhiêu lần để check 
@@ -71,7 +72,7 @@ block main
                             id="minOrderValue",
                             name="minOrderValue",
                             min="0"
-                            value=0
+                            value=voucher.minOrderValue
                         )
                 .col-4
                     div(class="form-group")
@@ -81,7 +82,7 @@ block main
                             class="form-control",
                             id="maxDiscountAmount",
                             name="maxDiscountAmount",
-                            value="0",
+                            value=voucher.maxDiscountAmount
                             min="0"
                         )
                 .col-4
@@ -93,7 +94,7 @@ block main
                             class="form-control",
                             id="usageLimitPerUser",
                             name="usageLimitPerUser",
-                            value="0",
+                            value=voucher.usageLimitPerUser
                             min="0"
                         )
             .row 
@@ -105,6 +106,7 @@ block main
                             class="form-control",
                             id="startDate",
                             name="startDate"
+                            value=voucher.startDateChange
                         )
                 .col-6
                     div(class="form-group")
@@ -114,6 +116,7 @@ block main
                             class="form-control",
                             id="endDate",
                             name="endDate"
+                            value=voucher.endDateChange
                         )
         div(class="form-group form-check form-check-inline")
             input(
@@ -122,7 +125,7 @@ block main
                 id="statusActive",
                 name="status",
                 value="active",
-                checked
+                checked=voucher.status=='active' ? true :false
             )
             label(for="statusActive" class="form-check-label") Hoạt động
         div(class="form-group form-check form-check-inline")
@@ -132,11 +135,13 @@ block main
                 id="statusInActive",
                 name="status",
                 value="inactive"
+                checked=voucher.status=='inactive' ? true :false
+
             )
             label(for="statusInActive" class="form-check-label") Dừng hoạt động
         div(class="form-group")
             button(
                 class="btn btn-primary"
                 type="submit"
-            ) Tạo mới
+            ) Cập nhật
     script(src="/admin/js/voucher.js")

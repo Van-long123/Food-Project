@@ -111,9 +111,9 @@ module.exports.createPost=async(req, res) => {
         minOrderValue: parseInt(req.body.minOrderValue),
         maxDiscountAmount: parseInt(req.body.maxDiscountAmount),
         usageLimitPerUser: parseInt(req.body.usageLimitPerUser),
-        startDate: '2025-01-27T20:55',
-        endDate: '2025-01-27T20:55',
-        status: 'active'
+        startDate: req.body.startDate,
+        endDate:req.body.endDate ,
+        status: req.body.status
     }
 
     const voucher=new Voucher(dataVoucher)
@@ -123,3 +123,49 @@ module.exports.createPost=async(req, res) => {
 }
 
 
+module.exports.edit=async(req, res) => {
+    try {
+        const voucher=await Voucher.findOne({
+            _id: req.params.id,
+            deleted:false,
+        })
+        if(!voucher){
+            req.flash('error','khuyến mãi ko tồn tại')
+            res.redirect(`back`)
+        }
+        // toISOString() là một phương thức trong JavaScript, được sử dụng để chuyển đổi một đối tượng Date thành một chuỗi biểu diễn thời gian theo chuẩn ISO 8601.
+        voucher['startDateChange'] = new Date(voucher.startDate).toISOString().slice(0, 16);
+        voucher['endDateChange'] = new Date(voucher.endDate).toISOString().slice(0, 16);
+
+        res.render('admin/pages/vouchers/edit',{title:'Cập nhật khuyến mãi',voucher})
+    } catch (error) {
+        req.flash('error','khuyến mãi ko tồn tại')
+        res.redirect(`back`)
+    }
+}
+module.exports.editPatch=async(req, res) => {
+    try {
+        const dataVoucher={
+            name: req.body.name,
+            code: req.body.code,
+            discountType: req.body.discountType,
+            discountValue: parseInt(req.body.discountValue),
+            quantity: parseInt(req.body.quantity),
+            minOrderValue: parseInt(req.body.minOrderValue),
+            maxDiscountAmount: parseInt(req.body.maxDiscountAmount),
+            usageLimitPerUser: parseInt(req.body.usageLimitPerUser),
+            startDate: req.body.startDate,
+            endDate:req.body.endDate ,
+            status: req.body.status
+        }
+    
+        await Voucher.updateOne({
+            _id: req.params.id,
+        },dataVoucher)
+        req.flash('success', `Cập nhật thành công khuyến mãi`);
+        res.redirect(`back`);
+    } catch (error) {
+        req.flash('error', `Cập nhật ko thành công`);
+        res.redirect(`back`);
+    }
+}
