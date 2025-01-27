@@ -1,0 +1,143 @@
+extend ../../layouts/default
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+block main 
+    h1 Thêm mới khuyến mãi
+    +alert-error(5000) 
+    form(
+        action=`${prefixAdmin}/vouchers/create`,
+        id="form-create-product",
+        method="POST"
+    )
+        div(class="form-group")
+            label(for="name") Tiêu đề giảm giá
+            input(
+            type="text",
+            class="form-control",
+            id="name",
+            name="name",
+            )
+        div(class="form-group")
+            div(class='d-flex')
+                label(for="code") Mã giảm giá
+                label(style="margin-left: auto; cursor: pointer;" generate-code) Tạo mã ngẫu nhiên
+            input(
+            type="text",
+            class="form-control",
+            id="code",
+            name="code",
+            )
+        .container-fluid    
+            .row 
+                .col-4
+                    div(class="form-group")
+                        label(for="discountType") Phương thức giảm giá
+                        select(name="discountType" class="form-control",)
+                            //- 
+                            option(value="amount") Số tiền 
+                            option(value="percent") Phần trăm
+                .col-4
+                    div(class="form-group")
+                        label(for="discountValue") % Giảm giá
+                        input(
+                            type="number",
+                            class="form-control",
+                            id="discountValue",
+                            name="discountValue",
+                            value="0",
+                            min="0"
+                        )
+                .col-4
+                    div(class="form-group")
+                        //- 
+                        label(for="stock") Số lượng mã giảm giá
+                        input(
+                            type="number",
+                            class="form-control",
+                            id="quantity",
+                            name="quantity",
+                            value="0",
+                            min="0"
+                        )
+
+            //- usageLimitPerUser số lần voucher có thể dùng hỏi chat cách để biết được user dùng voucher đó được bao nhiêu lần để check 
+            .row 
+                .col-4
+                    div(class="form-group")
+                        label(for="minOrderValue") Giá trị đơn hàng tối thiểu
+                        input(
+                            type="number",
+                            class="form-control",
+                            id="minOrderValue",
+                            name="minOrderValue",
+                            min="0"
+                            value=0
+                        )
+                .col-4
+                    div(class="form-group")
+                        label(for="maxDiscountAmount") Số tiền giảm giá tối đa
+                        input(
+                            type="number",
+                            class="form-control",
+                            id="maxDiscountAmount",
+                            name="maxDiscountAmount",
+                            value="0",
+                            min="0"
+                        )
+                .col-4
+                    div(class="form-group")
+                        //- 
+                        label(for="usageLimitPerUser") Giới hạn sử dụng cho mỗi người dùng
+                        input(
+                            type="number",
+                            class="form-control",
+                            id="usageLimitPerUser",
+                            name="usageLimitPerUser",
+                            value="0",
+                            min="0"
+                        )
+            .row 
+                .col-6
+                    div(class="form-group")
+                        label(for="discountType") Thời gian bắt đầu
+                        input(
+                            type="datetime-local",
+                            class="form-control",
+                            id="startDate",
+                            name="startDate"
+                            value='2025-01-27T13:55'
+                        )
+                .col-6
+                    div(class="form-group")
+                        label(for="discountValue") Thời gian kết thúc
+                        input(
+                            type="datetime-local",
+                            class="form-control",
+                            id="endDate",
+                            name="endDate"
+                        )
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio",
+                class="form-check-input",
+                id="statusActive",
+                name="status",
+                value="active",
+                checked
+            )
+            label(for="statusActive" class="form-check-label") Hoạt động
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio",
+                class="form-check-input",
+                id="statusInActive",
+                name="status",
+                value="inactive"
+            )
+            label(for="statusInActive" class="form-check-label") Dừng hoạt động
+        div(class="form-group")
+            button(
+                class="btn btn-primary"
+                type="submit"
+            ) Tạo mới
+    script(src="/admin/js/voucher.js")

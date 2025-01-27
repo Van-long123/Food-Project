@@ -33,3 +33,21 @@ if(buttonsDelete.length>0){
         })
     })
 }
+
+const generateRandomString=(length)=>{
+    const characters='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let result =""
+    for (let index = 0; index < length; index++) {
+        result+=characters.charAt(Math.floor(Math.random() * characters.length))
+    }
+    return result
+}
+
+const generateCode=document.querySelector('[generate-code]')
+if(generateCode){
+    generateCode.addEventListener('click',()=>{
+        const codeInput=document.querySelector('#code')
+        const code=generateRandomString(12)
+        codeInput.value=code
+    })
+}

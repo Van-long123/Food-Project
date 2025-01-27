@@ -97,3 +97,29 @@ module.exports.changeMulti=async(req, res) => {
     }
     res.redirect('back');
 }
+module.exports.create=async(req, res) => {
+    res.render('admin/pages/vouchers/create',{title:'Thêm mới khuyến mãi'})
+}
+module.exports.createPost=async(req, res) => {
+    console.log()
+    const dataVoucher={
+        name: req.body.name,
+        code: req.body.code,
+        discountType: req.body.discountType,
+        discountValue: parseInt(req.body.discountValue),
+        quantity: parseInt(req.body.quantity),
+        minOrderValue: parseInt(req.body.minOrderValue),
+        maxDiscountAmount: parseInt(req.body.maxDiscountAmount),
+        usageLimitPerUser: parseInt(req.body.usageLimitPerUser),
+        startDate: '2025-01-27T20:55',
+        endDate: '2025-01-27T20:55',
+        status: 'active'
+    }
+
+    const voucher=new Voucher(dataVoucher)
+    await voucher.save()
+    req.flash('success', `Đã thêm thành công khuyến mãi`);
+        res.redirect(`${systemConfig.prefixAdmin}/vouchers`);
+}
+
+
