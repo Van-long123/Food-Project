@@ -6,88 +6,106 @@ include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
 block main
-    h1 Danh sách khuyến mãi
-    .card.mb-3
-        .card-header Bộ lọc và Tìm kiếm
-        .card-body
-            +alert-success(5000)
-            +alert-error(5000)
-            .row
-                .col-6
-    
-                    +fillter-status(fillterStatus)
-                .col-6
-                    +search()
-    .card.mb-3
-        .card-header Danh sách sản phẩm
-        .card-body
-            .row
-                .col-8
-                    +form-change-multi-account(`${prefixAdmin}/vouchers/change-multi?_method=PATCH`)
-                .col-4
-                    a(href=`${prefixAdmin}/vouchers/create` class="btn btn-success") +Thêm mới
-    .card.mb-3
-        .card-header Danh sách
+    if(role.permissions.includes("vouchers_view"))
+        h1 Danh sách khuyến mãi
+        .card.mb-3
+            .card-header Bộ lọc và Tìm kiếm
             .card-body
-            table(class="table table-hover table-sm" checkbox-multi)
-                thead
-                    tr
-                        th 
-                            input(type="checkbox", name="checkall")
-                        th STT
-                        th Tên khuyến mãi
-                        th Mã khuyến mãi
-                        th Loại khuyến mãi
-                        th Giá trị
-                        th Trạng thái
-                        th Đã sử dụng
-                        th Hành động
-                tbody
-                    each item,index in records
+                +alert-success(5000)
+                +alert-error(5000)
+                .row
+                    .col-6
+        
+                        +fillter-status(fillterStatus)
+                    .col-6
+                        +search()
+        .card.mb-3
+            .card-header Danh sách sản phẩm
+            .card-body
+                .row
+                    .col-8
+                        if(role.permissions.includes("vouchers_edit"))
+                            +form-change-multi-account(`${prefixAdmin}/vouchers/change-multi?_method=PATCH`)
+                    .col-4
+                        if(role.permissions.includes("vouchers_create"))
+                            a(href=`${prefixAdmin}/vouchers/create` class="btn btn-success") +Thêm mới
+        .card.mb-3
+            .card-header Danh sách
+                .card-body
+                table(class="table table-hover table-sm" checkbox-multi)
+                    thead
                         tr
-                            td 
-                                input(type="checkbox", name="id" value=item.id)
-                            td #{pagination.limitItems*(pagination.currentPage-1)+(index +1)}
-                            td #{item.name}
-                            td #{item.code}
-                            td #{item.discountType}
-                            td #{item.discountType=="percent"? `${item.discountValue} %` : `${item.discountValue} đ`} 
-                            td #{item.status}
-                            td 
-                                if(item.status == "active")
-                                    a(
-                                        href="javascript:;"
-                                        data-status=item.status
-                                        data-id=item.id
-                                        button-change-status
-                                        class="badge badge-success") #{item.status}
-                                else
-                                    a(
-                                        href="javascript:;"
-                                        data-status=item.status
-                                        data-id=item.id
-                                        button-change-status
-                                        class="badge badge-danger") #{item.status}
-                            td 
-                                a(href=`${prefixAdmin}/vouchers/detail/${item.id}` class="btn btn-secondary btn-sm") Chi tiết
-                                a(href=`${prefixAdmin}/vouchers/edit/${item.id}` class="btn btn-warning btn-sm ml-1") Sửa
-                                button(
-                                    class="btn btn-danger btn-sm ml-1"
-                                    data-id=item.id
-                                    button-delete
-                                    ) Xóa
-    
-    +pagination(pagination)
-    form(
-        action=""
-        method="POST"
-        id="form-change-status"
-        data-path=`${prefixAdmin}/vouchers/change-status`
-    ) 
-    form(
-        action=""
-        method="POST"
-        id="form-delete-item"
-        data-path=`${prefixAdmin}/vouchers/delete`
-    ) 
-    script(src="/admin/js/voucher.js")
+                            th 
+                                input(type="checkbox", name="checkall")
+                            th STT
+                            th Tên khuyến mãi
+                            th Mã khuyến mãi
+                            th Loại khuyến mãi
+                            th Giá trị
+                            th Trạng thái
+                            th Đã sử dụng
+                            th Hành động
+                    tbody
+                        each item,index in records
+                            tr
+                                td 
+                                    input(type="checkbox", name="id" value=item.id)
+                                td #{pagination.limitItems*(pagination.currentPage-1)+(index +1)}
+                                td #{item.name}
+                                td #{item.code}
+                                td #{item.discountType}
+                                td #{item.discountType=="percent"? `${item.discountValue} %` : `${item.discountValue} đ`} 
+                                td #{item.status}
+                                td 
+                                    if(role.permissions.includes("vouchers_edit"))
+                                        if(item.status == "active")
+                                            a(
+                                                href="javascript:;"
+                                                data-status=item.status
+                                                data-id=item.id
+                                                button-change-status
+                                                class="badge badge-success") #{item.status}
+                                        else
+                                            a(
+                                                href="javascript:;"
+                                                data-status=item.status
+                                                data-id=item.id
+                                                button-change-status
+                                                class="badge badge-danger") #{item.status}
+                                    else
+                                        if(item.status == "active")
+                                            a(
+                                                href="javascript:;"
+                                                class="badge badge-success") #{item.status}
+                                        else
+                                            a(
+                                                href="javascript:;"
+                                                class="badge badge-danger") #{item.status}
+                                td 
+                                    if(role.permissions.includes("vouchers_view"))
+                                        a(href=`${prefixAdmin}/vouchers/detail/${item.id}` class="btn btn-secondary btn-sm") Chi tiết
+                                    if(role.permissions.includes("vouchers_edit"))
+                                        a(href=`${prefixAdmin}/vouchers/edit/${item.id}` class="btn btn-warning btn-sm ml-1") Sửa
+                                    if(role.permissions.includes("vouchers_delete"))
+                                        button(
+                                            class="btn btn-danger btn-sm ml-1"
+                                            data-id=item.id
+                                            button-delete
+                                            ) Xóa
+        
+        +pagination(pagination)
+        form(
+            action=""
+            method="POST"
+            id="form-change-status"
+            data-path=`${prefixAdmin}/vouchers/change-status`
+        ) 
+        form(
+            action=""
+            method="POST"
+            id="form-delete-item"
+            data-path=`${prefixAdmin}/vouchers/delete`
+        ) 
+        script(src="/admin/js/voucher.js")
+    else
+        img(src="/uploads/5206817.jpg", alt="Unauthorization" style="width:1000px;height:600px")

@@ -2,33 +2,36 @@ extend ../../layouts/default
 include ../../mixins/alert.pug
 include ../../mixins/moment.pug
 block main
-    if (voucher.name) 
-        h1(class="mb-4") #{voucher.name}
-    if (voucher.code) 
-        div(class="mb-4") code: <b>#{voucher.code}</b>
-    if (voucher.description) 
-        div(class="mb-4") Mô tả: <b>!{voucher.description}</b>
-    if (voucher.discountType) 
-        div(class="mb-4") Loại khuyến mãi: <b>#{voucher.discountType}</b>
-    if (voucher.quantity)
-        div(class="mb-4") Số lượng: <b>#{voucher.quantity}</b>
-    if (voucher.discountValue)
-        div(class="mb-4") Giá trị: <b> #{voucher.discountValue}</b>
-    if (voucher.usedCount)
-        div(class="mb-4") Số lượng sử dụng: <b>#{voucher.usedCount}</b>
-    if (voucher.startDate)
-        div(class="mb-4") Ngày bắt đầu: 
-            +formatDate(voucher.startDate)
-        
-    if (voucher.endDate)
-        div(class="mb-4") Ngày kết thúc: 
-            +formatDate(voucher.endDate)
-    if (voucher.status)
-        div(class="mb-4")
-            span Status:
-            if (voucher.status === "active")
-                span(class="badge badge-success") Hoạt động
-            else
-                span(class="badge badge-danger") Dừng hoạt động
-    a(href=`${prefixAdmin}/vouchers/edit/${voucher.id}` class="btn btn-warning btn-sm ml-1") Chỉnh sửa
-    script(src="/admin/js/voucher.js")
+    if(role.permissions.includes("vouchers_view"))
+        if (voucher.name) 
+            h1(class="mb-4") #{voucher.name}
+        if (voucher.code) 
+            div(class="mb-4") code: <b>#{voucher.code}</b>
+        if (voucher.description) 
+            div(class="mb-4") Mô tả: <b>!{voucher.description}</b>
+        if (voucher.discountType) 
+            div(class="mb-4") Loại khuyến mãi: <b>#{voucher.discountType}</b>
+        if (voucher.quantity)
+            div(class="mb-4") Số lượng: <b>#{voucher.quantity}</b>
+        if (voucher.discountValue)
+            div(class="mb-4") Giá trị: <b> #{voucher.discountValue}</b>
+        if (voucher.usedCount)
+            div(class="mb-4") Số lượng sử dụng: <b>#{voucher.usedCount}</b>
+        if (voucher.startDate)
+            div(class="mb-4") Ngày bắt đầu: 
+                +formatDate(voucher.startDate)
+            
+        if (voucher.endDate)
+            div(class="mb-4") Ngày kết thúc: 
+                +formatDate(voucher.endDate)
+        if (voucher.status)
+            div(class="mb-4")
+                span Status:
+                if (voucher.status === "active")
+                    span(class="badge badge-success") Hoạt động
+                else
+                    span(class="badge badge-danger") Dừng hoạt động
+        a(href=`${prefixAdmin}/vouchers/edit/${voucher.id}` class="btn btn-warning btn-sm ml-1") Chỉnh sửa
+        script(src="/admin/js/voucher.js")
+    else
+        img(src="/uploads/5206817.jpg", alt="Unauthorization" style="width:1000px;height:600px")

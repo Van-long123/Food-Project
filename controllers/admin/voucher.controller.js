@@ -5,6 +5,10 @@ const fillterStatusHelper=require('../../helpers/fillterStatusHelper');
 const Voucher = require("../../model/voucher.model");
 const User = require("../../model/user.model");
 module.exports.index=async (req,res)=>{
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_view")){
+        return;
+    }
     let find={
         deleted:false
     }
@@ -43,7 +47,10 @@ module.exports.index=async (req,res)=>{
 }
 
 module.exports.detail=async(req, res) => {
-   
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_view")){
+        return;
+    }
     try {
         const voucher=await Voucher.findOne({_id:req.params.id,deleted:false})
         res.render(`admin/pages/vouchers/detail`,{
@@ -58,6 +65,10 @@ module.exports.detail=async(req, res) => {
 }
 
 module.exports.changeStatus=async(req, res) => {
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_edit")){
+        return;
+    }
     const status=req.params.status
     const id=req.params.id
     await Voucher.updateOne({
@@ -69,6 +80,10 @@ module.exports.changeStatus=async(req, res) => {
     res.redirect('back');
 }
 module.exports.deleteItem=async(req, res) => {
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_delete")){
+        return;
+    }
     const id=req.params.id
     await Voucher.updateOne({
         _id:id
@@ -80,6 +95,10 @@ module.exports.deleteItem=async(req, res) => {
     res.redirect('back');
 }
 module.exports.changeMulti=async(req, res) => {
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_edit")){
+        return;
+    }
     const type=req.body.type
     const ids=req.body.ids.split(', ')
     switch(type){
@@ -102,6 +121,10 @@ module.exports.create=async(req, res) => {
     res.render('admin/pages/vouchers/create',{title:'Thêm mới khuyến mãi'})
 }
 module.exports.createPost=async(req, res) => {
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_create")){
+        return;
+    }
     const dataVoucher={
         name: req.body.name,
         code: req.body.code,
@@ -151,6 +174,10 @@ module.exports.edit=async(req, res) => {
     }
 }
 module.exports.editPatch=async(req, res) => {
+    const permissions=res.locals.role.permissions
+    if(!permissions.includes("vouchers_edit")){
+        return;
+    }
     try {
         const dataVoucher={
             name: req.body.name,

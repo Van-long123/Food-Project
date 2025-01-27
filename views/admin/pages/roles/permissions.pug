@@ -76,6 +76,30 @@ block main
                         each record in records
                             td(class="text-center")
                                 input(type="checkbox")
+                    //- khuyến mãi
+                    tr
+                        td(colspan="4")
+                            b Khuyến mãi
+                    tr(data-name="vouchers_view")
+                        td Xem
+                        each record in records 
+                            td(class="text-center")
+                                input(type="checkbox")
+                    tr(data-name="vouchers_create")
+                        td Thêm mới
+                        each record in records
+                            td(class="text-center")
+                                input(type="checkbox")
+                    tr(data-name="vouchers_edit")
+                        td Chỉnh sửa
+                        each record in records
+                            td(class="text-center")
+                                input(type="checkbox")
+                    tr(data-name="vouchers_delete")
+                        td Xóa
+                        each record in records
+                            td(class="text-center")
+                                input(type="checkbox")
                     //- danh mục bài viết
                     tr
                         td(colspan="4")
