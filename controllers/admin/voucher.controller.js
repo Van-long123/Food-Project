@@ -3,6 +3,7 @@ const paginationHelper=require('../../helpers/pagination')
 const searchHelper=require('../../helpers/search')
 const fillterStatusHelper=require('../../helpers/fillterStatusHelper');
 const Voucher = require("../../model/voucher.model");
+const User = require("../../model/user.model");
 module.exports.index=async (req,res)=>{
     let find={
         deleted:false
@@ -101,7 +102,6 @@ module.exports.create=async(req, res) => {
     res.render('admin/pages/vouchers/create',{title:'Thêm mới khuyến mãi'})
 }
 module.exports.createPost=async(req, res) => {
-    console.log()
     const dataVoucher={
         name: req.body.name,
         code: req.body.code,
@@ -118,6 +118,12 @@ module.exports.createPost=async(req, res) => {
 
     const voucher=new Voucher(dataVoucher)
     await voucher.save()
+    await User.updateMany({
+    },{
+        $push:{vouchers:{
+            voucherId:voucher.id,
+        }}
+    })
     req.flash('success', `Đã thêm thành công khuyến mãi`);
         res.redirect(`${systemConfig.prefixAdmin}/vouchers`);
 }
