@@ -4,6 +4,7 @@ block main
     if(role.permissions.includes("users_edit"))
         h1 Chỉnh sửa mới tài khoản
         +alert-error(5000) 
+        +alert-success(5000)
         form(
             action=`${prefixAdmin}/users/edit/${data.id}?_method=PATCH`,
             method="POST"

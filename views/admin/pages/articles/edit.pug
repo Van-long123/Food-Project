@@ -5,6 +5,7 @@ block main
     if(role.permissions.includes("articles_edit"))
         h1 Cập nhật bài viết
         +alert-error(5000) 
+        +alert-success(5000)
         form(
             action=`${prefixAdmin}/articles/edit/${record.id}?_method=PATCH`,
             id="form-create-article",
