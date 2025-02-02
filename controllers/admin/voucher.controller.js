@@ -4,6 +4,7 @@ const searchHelper=require('../../helpers/search')
 const fillterStatusHelper=require('../../helpers/fillterStatusHelper');
 const Voucher = require("../../model/voucher.model");
 const User = require("../../model/user.model");
+const Account = require("../../model/account.model");
 module.exports.index=async (req,res)=>{
     const permissions=res.locals.role.permissions
     if(!permissions.includes("vouchers_view")){
@@ -129,6 +130,7 @@ module.exports.createPost=async(req, res) => {
         name: req.body.name,
         code: req.body.code,
         description: req.body.description,
+        applyFor: req.body.applyFor,
         discountType: req.body.discountType,
         discountValue: parseInt(req.body.discountValue),
         quantity: parseInt(req.body.quantity),
@@ -187,6 +189,7 @@ module.exports.editPatch=async(req, res) => {
             name: req.body.name,
             code: req.body.code,
             description: req.body.description,
+            applyFor: req.body.applyFor,
             discountType: req.body.discountType,
             discountValue: parseInt(req.body.discountValue),
             quantity: parseInt(req.body.quantity),
@@ -197,10 +200,41 @@ module.exports.editPatch=async(req, res) => {
             endDate:req.body.endDate ,
             status: req.body.status
         }
-    
+        
+        const voucher=await Voucher.findOne({
+            _id: req.params.id,
+        }).select('applyFor')
+
         await Voucher.updateOne({
             _id: req.params.id,
         },dataVoucher)
+
+        if(req.body.applyFor!==voucher.applyFor){
+            await User.updateMany({},{
+                [req.body.applyFor==='allUsers' ? '$push' : '$pull'] :{
+                    vouchers:{
+                        voucherId:voucher.id,
+                    }
+                }
+            })
+            // if(req.body.applyFor=='allUsers'){
+            //     await User.updateMany({
+            //     },{
+            //         $push:{vouchers:{
+            //             voucherId:voucher.id,
+            //         }}
+            //     })
+            // }
+            // else{
+            //     await User.updateMany({
+            //     },{
+            //         $pull:{vouchers:{
+            //             voucherId:voucher.id,
+            //         }}
+            //     })
+            // }
+        }
+
         req.flash('success', `Cập nhật thành công khuyến mãi`);
         res.redirect(`back`);
     } catch (error) {

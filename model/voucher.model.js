@@ -5,6 +5,7 @@ const voucherSchema=new mongoose.Schema({
     },
     name:String,
     description:String,
+    applyFor:String,
     // expireAt: {
     //     type: Date,
     //     expires:0

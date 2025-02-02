@@ -5,6 +5,7 @@ block main
     if(role.permissions.includes("vouchers_edit"))
         h1 Cập nhật khuyến mãi
         +alert-error(5000) 
+        +alert-success(5000) 
         form(
             action=`${prefixAdmin}/vouchers/edit/${voucher.id}?_method=PATCH`,
             id="form-create-product",
@@ -41,6 +42,11 @@ block main
                 value=voucher.description
                 required
                 )
+            div(class="form-group")
+                label(for="applyFor") Áp dụng cho
+                select(name="applyFor" class="form-control",)
+                    option(value="allUsers" selected=(voucher.applyFor=='allUsers' ? true :false)) Tất cả người dùng
+                    option(value="certainUsers" selected=(voucher.applyFor=='certainUsers' ? true :false)) Người dùng nhất định
             .container-fluid    
                 .row 
                     .col-4

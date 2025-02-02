@@ -5,6 +5,7 @@ block main
     if(role.permissions.includes("vouchers_create"))
         h1 Thêm mới khuyến mãi
         +alert-error(5000) 
+        +alert-success(5000) 
         form(
             action=`${prefixAdmin}/vouchers/create`,
             id="form-create-product",
