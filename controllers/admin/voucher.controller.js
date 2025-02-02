@@ -142,12 +142,16 @@ module.exports.createPost=async(req, res) => {
 
     const voucher=new Voucher(dataVoucher)
     await voucher.save()
-    await User.updateMany({
-    },{
-        $push:{vouchers:{
-            voucherId:voucher.id,
-        }}
-    })
+    
+    if(req.body.applyFor=='allUsers'){
+        await User.updateMany({
+        },{
+            $push:{vouchers:{
+                voucherId:voucher.id,
+            }}
+        })
+    }
+
     req.flash('success', `Đã thêm thành công khuyến mãi`);
         res.redirect(`${systemConfig.prefixAdmin}/vouchers`);
 }

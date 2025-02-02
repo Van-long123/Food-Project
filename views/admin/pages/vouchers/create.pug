@@ -38,6 +38,11 @@ block main
                 name="description",
                 required
                 )
+            div(class="form-group")
+                label(for="applyFor") Áp dụng cho
+                select(name="applyFor" class="form-control",)
+                    option(value="allUsers") Tất cả người dùng
+                    option(value="certainUsers") Người dùng nhất định
             .container-fluid    
                 .row 
                     .col-4
