@@ -5,6 +5,7 @@ block main
     if(role.permissions.includes("products_edit"))
         h1 Cập nhật sản phẩm
         +alert-error(5000) 
+        +alert-success(5000)
         form(
             action=`${prefixAdmin}/products/edit/${product.id}?_method=PATCH`,
             id="form-create-product",
