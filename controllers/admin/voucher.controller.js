@@ -126,6 +126,15 @@ module.exports.createPost=async(req, res) => {
     if(!permissions.includes("vouchers_create")){
         return;
     }
+    const existVoucher=await Voucher.findOne({
+        code:req.body.code,
+        deleted:false
+    })
+    if(existVoucher){
+        req.flash('error', `Mã giảm giá đã tồn tại, vui lòng chọn mã khác.`);
+        res.redirect(`back`);
+        return
+    }
     const dataVoucher={
         name: req.body.name,
         code: req.body.code,
@@ -142,6 +151,8 @@ module.exports.createPost=async(req, res) => {
         status: req.body.status
     }
 
+    
+
     const voucher=new Voucher(dataVoucher)
     await voucher.save()
     
@@ -155,7 +166,7 @@ module.exports.createPost=async(req, res) => {
     }
 
     req.flash('success', `Đã thêm thành công khuyến mãi`);
-        res.redirect(`${systemConfig.prefixAdmin}/vouchers`);
+    res.redirect(`${systemConfig.prefixAdmin}/vouchers`);
 }
 
 
@@ -185,6 +196,16 @@ module.exports.editPatch=async(req, res) => {
         return;
     }
     try {
+        const existVoucher=await Voucher.findOne({
+            _id:{$ne:req.params.id},
+            code:req.body.code,
+            deleted:false
+        })
+        if(existVoucher){
+            req.flash('error', `Mã giảm giá đã tồn tại, vui lòng chọn mã khác.`);
+            res.redirect(`back`);
+            return
+        }
         const dataVoucher={
             name: req.body.name,
             code: req.body.code,
@@ -200,6 +221,9 @@ module.exports.editPatch=async(req, res) => {
             endDate:req.body.endDate ,
             status: req.body.status
         }
+
+        
+
         
         const voucher=await Voucher.findOne({
             _id: req.params.id,
@@ -240,5 +264,27 @@ module.exports.editPatch=async(req, res) => {
     } catch (error) {
         req.flash('error', `Cập nhật ko thành công`);
         res.redirect(`back`);
+    }
+}
+
+module.exports.checkCode=async(req, res) => {
+    try {
+        let dataJson={ message: "Mã giảm giá đã tồn tại." }
+        const {code,id}=req.params;
+        
+        let query={
+            code:code,
+            deleted:false
+        }
+        if(id){
+            query._id={$ne:id}
+        }
+        const existVoucher=await Voucher.findOne(query)
+        if(existVoucher){
+            dataJson.exists=true
+        }
+        return  res.json(dataJson);
+    } catch (error) {
+        res.status(500).json({ error: "Lỗi server khi kiểm tra mã giảm giá." });
     }
 }

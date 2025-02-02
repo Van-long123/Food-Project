@@ -14,4 +14,8 @@ router.post('/create',validate.createPost,controller.createPost)
 
 router.get('/edit/:id',controller.edit)
 router.patch('/edit/:id',validate.editPatch,controller.editPatch)
+
+// với dấu ? để id không bắt buộc.
+router.get('/check-code/:code/:id?',controller.checkCode)
+
 module.exports=router

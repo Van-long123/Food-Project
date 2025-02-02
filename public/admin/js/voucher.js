@@ -49,5 +49,38 @@ if(generateCode){
         const codeInput=document.querySelector('#code')
         const code=generateRandomString(12)
         codeInput.value=code
+        checkCode(code)
+    })
+}
+
+const codeInput=document.querySelector('input[name="code"]')
+if(codeInput){
+    codeInput.addEventListener('blur',e=>{
+        checkCode(e.target.value)
+    })
+}
+function checkCode(value){
+    const codeError=document.querySelector('#codeError')
+    const id=codeError.getAttribute('data-id')
+    let link=`/admin/vouchers/check-code/${value}`
+    if(id){
+        link=`${link}/${id}`
+    }
+    fetch(link,{
+        method: 'GET',
+    })
+    .then(res=>{
+        if(res.status===500){
+            codeError.textContent= 'Lỗi server khi kiểm tra mã giảm giá'
+            throw new Error("Server error");
+        }
+        return res.json()
+    })
+    .then(data=>{
+        if(data.exists){
+            codeError.textContent=data.message
+        }else{
+            codeError.textContent=''
+        }
     })
 }

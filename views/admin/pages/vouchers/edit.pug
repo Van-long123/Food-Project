@@ -23,7 +23,7 @@ block main
                 )
             div(class="form-group")
                 div(class='d-flex')
-                    label(for="code") Mã giảm giá
+                    label(for="code") Mã giảm giá <span class="startValidate">*</span>
                     label(style="margin-left: auto; cursor: pointer;" generate-code) Tạo mã ngẫu nhiên
                 input(
                 type="text",
@@ -31,7 +31,9 @@ block main
                 id="code",
                 name="code",
                 value=voucher.code
+                required
                 )
+                small(id="codeError" class="form-text text-danger" data-id=voucher.id)  
             div(class="form-group")
                 label(for="description") Mô tả <span class="startValidate">*</span>
                 input(
