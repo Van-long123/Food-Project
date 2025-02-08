@@ -1,7 +1,10 @@
 const mongoose=require('mongoose');
 const generate=require('../helpers/generate')
 const userSchema=new mongoose.Schema({
-    _id: { type: String,default: () => new mongoose.Types.ObjectId().toHexString(), },
+    // MongoDB mặc định sử dụng ObjectId nếu chuyển qua string như ở dưới thì truy vấn lấy user ko đc
+    // _id: { type: mongoose.Schema.Types.ObjectId, default: () => new mongoose.Types.ObjectId() },
+    // _id: { type: String,default: () => new mongoose.Types.ObjectId(), },
+    googleId:String,
     fullname:String,
     email:String,
     vouchers:[

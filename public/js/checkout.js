@@ -230,8 +230,9 @@ if (btn1a) {
             products: productsId
         }
 
-        const url = new URL(window.location.href)
-        if (url.searchParams.get('id')) {
+        const url = new URL(window.location.href);
+        const pathParts = url.pathname.split("/");
+        if (pathParts.length>3 && pathParts[3]) {
             data.payInHome = true
         }
         if (checkInfo) {
@@ -250,5 +251,241 @@ if (btn1a) {
                 }
             })
         }
+    })
+}
+
+const inputCheckedAll=document.querySelectorAll('input[name="delivery-method"]')
+if(inputCheckedAll){
+    const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
+    const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
+    const unitPrice=document.querySelector('.unit-price').querySelector('.price-amount1')
+    const discountVoucher=document.querySelector('.discount-voucher')
+
+    inputCheckedAll.forEach(input=>{
+        if(input.checked){
+            shippingFee.innerHTML=`
+                ${input.value}<span class="currency-symbol">đ</span>
+            `
+            const priceTotal=(parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(input.value)).toFixed(3)
+            totalPrice.innerHTML=`
+            ${priceTotal}<span class="currency-symbol">đ</span>
+            `
+        }
+        input.addEventListener('click',e=>{
+            shippingFee.innerHTML=`
+                ${input.value}<span class="currency-symbol">đ</span>
+            `
+            let priceTotal=(parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(input.value))
+
+            if(discountVoucher){
+                const discountVoucherValue=parseFloat(discountVoucher.querySelector('.price-amount1').textContent.slice(0,-1))
+                if(discountVoucherValue){
+                    priceTotal = priceTotal-discountVoucherValue
+                }
+            }
+            console.log(priceTotal)
+            totalPrice.innerHTML=`
+            ${priceTotal.toFixed(3)}<span class="currency-symbol">đ</span>
+            `
+        })
+    })
+}
+
+// display voucher 
+const btnVoucher=document.querySelector('.btn-voucher')
+if(btnVoucher){
+    btnVoucher.addEventListener('click',e=>{
+        const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
+        const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
+
+        const priceTotal=(parseFloat(totalPrice.textContent.slice(0,-1))-parseFloat(shippingFee.textContent.slice(0,-1))).toFixed(3)
+        fetch(`/vouchers/get-my-voucher/${priceTotal}`)
+            .then(res=>res.json())
+            .then(data=>{
+                if(data.code==200){
+                    const vouchers=data.vouchers
+                    let htmls;
+                    if(vouchers.length>0){
+                        htmls=vouchers.map(item=>{
+                            return `
+                            <div class="voucher-card mb-3" data-id="${item._id}">
+                                <div class="voucher-left"><img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher" /><span>Toàn Ngành Hàng</span></div>
+                                <div class="voucher-right">
+                                    <span class="use-now">Dùng ngay &gt;</span>
+                                    <div class="voucher-title">Giảm ${item.discountValue.toLocaleString('vi-VN') }${item.discountType=='percent' ? '%' : 'đ'}  </div>
+                                    <div class="voucher-details">Giảm tối đa ${item.maxDiscountAmount.toLocaleString('vi-VN')}đ</div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: ${item.progress}%;"></div></div>
+                                    <div class="voucher-usage">Đã dùng ${item.progress}%  </div>
+                                </div>
+                            </div>
+                            `
+                        })
+                    }
+                    else{
+                        htmls=[`
+                        <div class="no-voucher-container">
+                            <p class="no-voucher-text">Bạn chưa có voucher nào. Hãy tìm kiếm và nhận ngay!</p>
+                        </div>                     
+                        `]
+                    }
+                    
+                    const modalBody=document.querySelector('.modal-body')
+                    modalBody.innerHTML=htmls.join(' ')
+                    useVoucher()
+                }
+                else{
+                    alert(data.message)
+                }
+            })
+    })
+}
+// display voucher 
+
+// add voucher 
+// khi add voucher phải kiểm là đơn hàng đó có thõa mãn đơn hàng tối thiểu ko chỉ ở checkout
+const voucherErrorContainer=document.querySelector('.voucher-error-container')
+if(voucherErrorContainer){
+    const voucherErrorClose=voucherErrorContainer.querySelector('.voucher-error-close')
+    voucherErrorClose.addEventListener('click',e=>{
+        voucherErrorContainer.classList.add('hidden')
+    })
+}
+const saveBtn=document.querySelector('#save-btn')
+if(saveBtn){
+    const input = document.getElementById('voucher-input');
+    saveBtn.addEventListener('click',e=>{
+        const voucherCode=input.value.trim();
+        if(!voucherCode){
+            voucherErrorContainer.classList.remove('hidden')
+            return
+        }
+        const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
+        const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
+
+        const priceTotal=(parseFloat(totalPrice.textContent.slice(0,-1))-parseFloat(shippingFee.textContent.slice(0,-1))).toFixed(3)
+        fetch(`/vouchers/check-voucher/${voucherCode}/${priceTotal}`,{
+            method:"GET"
+        })
+        .then(res => {
+            return res.json()
+        })
+        .then(data => {
+            if(data.exists){
+                if(!data.alreadyOwned){
+                    const noVoucherContainer =document.querySelector('.no-voucher-container')
+                    if(noVoucherContainer){
+                        noVoucherContainer.classList.add('hidden')
+                    }
+                    const item=data.voucher
+                    const modalBody=document.querySelector('.modal-body')
+                    const progress=(item.usedCount/item.quantity*100).toFixed(1)
+                    const newDiv= document.createElement('div')
+                    newDiv.classList.add('mb-3')
+                    newDiv.innerHTML=`
+                        <div class="voucher-card">
+                            <div class="voucher-left">
+                                <img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher">
+                                <span>Toàn Ngành Hàng</span>
+                            </div>
+                            <div class="voucher-right">
+                                <span class="use-now">Dùng ngay &gt;</span>
+                                <div class="voucher-title">
+                                    Giảm ${item.discountValue.toLocaleString('vi-VN') }${item.discountType=='percent' ? '%' : 'đ'}
+                                </div>
+                                <div class="voucher-details">
+                                    Giảm tối đa ${item.maxDiscountAmount.toLocaleString('vi-VN')}đ 
+                                </div>
+                                <div class="voucher-usage">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${progress}%;"></div>
+                                    </div>
+                                    <span>Đã dùng ${progress}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    modalBody.prepend(newDiv);
+                    // vouchers.innerHTML=newDiv;
+                    notification('Bạn đã thêm voucher thành công!')
+                }
+                else{
+                    voucherErrorContainer.querySelector('.voucher-error-message').textContent = data.message
+                    voucherErrorContainer.classList.remove('hidden');
+                }
+                
+            }
+            else{
+                voucherErrorContainer.classList.remove('hidden')
+            }
+        })
+    })
+}
+
+function notification(msg){
+    const notification = document.getElementById('notification');
+    const timeout=notification.getAttribute('data-time')
+    notification.classList.remove('hidden')
+    notification.classList.add('show')
+
+    notification.textContent=msg
+    setTimeout(() => {
+        notification.classList.remove('show')
+        notification.classList.add('hidden')
+    },timeout );
+}
+
+// add voucher 
+function useVoucher(){
+    const useNow=document.querySelectorAll('.use-now')
+    useNow.forEach(item=>{
+        item.addEventListener('click',e=>{
+            const voucherCard=e.target.closest('.voucher-card')
+            const voucherId=voucherCard.getAttribute('data-id')
+            fetch(`/vouchers/get-voucher-by-id/${voucherId}`)
+                .then(res=>res.json()
+                .then(data=>{
+                    if(data.code==200){
+                        const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
+                        const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
+                        const unitPrice=document.querySelector('.unit-price').querySelector('.price-amount1')
+                        // lấy instance  của modal đã được Bootstrap khởi tạo trước đó.
+                        let modal = bootstrap.Modal.getInstance(document.getElementById("voucherModal"));
+                        if (modal) {
+                            modal.hide()
+                        };
+                        const voucher=data.voucher;
+                        const codeVoucher=document.querySelector('.code-voucher')
+                        const discountVoucher=document.querySelector('.discount-voucher')
+                        let discountValue
+                        if(voucher.discountType=="amount"){
+                            discountValue= voucher.discountValue
+                        }
+                        else{
+                            
+                            const priceTotal=parseFloat((parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(shippingFee.textContent.slice(0,-1))).toFixed(3))
+                            const priceDiscount=(priceTotal*voucher.discountValue/100)*1000
+                            if(priceDiscount>voucher.maxDiscountAmount){
+                                discountValue = voucher.maxDiscountAmount
+                            }
+                            else{
+                                discountValue = priceDiscount
+                            }
+                            
+                        }
+                        const priceTotal=((parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(shippingFee.textContent.slice(0,-1)))*1000-discountValue).toLocaleString('vi-VN')
+                        codeVoucher.textContent=`Mã voucher: ${voucher.code}` 
+                        discountVoucher.innerHTML=`
+                        <span>Voucher giảm giá</span><span class="text-right price-amount1 mb-1">${discountValue.toLocaleString('vi-VN')}<span class="currency-symbol">đ</span></span>
+                        `
+                        totalPrice.innerHTML=`
+                        ${priceTotal}<span class="currency-symbol">đ</span>
+                        `
+                    }
+                    else{
+                        alert(data.message)
+                    }
+                })
+            )
+        })
     })
 }

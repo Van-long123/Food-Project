@@ -21,7 +21,6 @@ block main
                         lable(id="phone-error" class="error invalid-feedback1" for="phone") Vui lòng nhập số điện thoại
                         lable(id="phone-error-format" class="error invalid-feedback1" for="phone" ) Số điện thoại ko đúng định dạng
 
-
                   .row  
                     .col-lg-6.col-12.mb-3
                       select(id='provinces' class="form-control" name="provinces")
@@ -39,7 +38,44 @@ block main
                     .col-lg-6.col-12
                       input(class="input-hover bg-white border form-control " name="address" value=user?user.address:'' type="text" placeholder="Số nhà,ngõ,đường")
                       lable(id="address-error" class="error invalid-feedback1" for="address") Vui lòng địa chỉ
-
+          .row.mt-3
+            .col-12
+              div(class="delivery-methods bg-white rounded p-15 mb-10")
+                h4(class="title-checkout color-black mb-3")
+                  b Phương thức giao hàng
+                .row
+                  .col-4
+                    .form-check.mb-2
+                      input(type="radio" id="economy-delivery" name="delivery-method" value="20.000" class="form-check-input" checked )
+                      label(for="economy-delivery" class="mt-2") Giao hàng tiết kiệm
+                        div(class="delivery-content")
+                          span(class="text-date") 40-50 phút
+                          span(class="text-price") 20.000đ
+                  .col-4
+                    .form-check.mb-2
+                      input(type="radio" id="standard-delivery" name="delivery-method" value="30.000" class="form-check-input" )
+                      label(for="standard-delivery" class="mt-2") Giao hàng tiêu chuẩn 
+                        div(class="delivery-content")
+                          span(class="text-date") 30 - 40 phút
+                          span(class="text-price") 30.000đ
+                  .col-4
+                    .form-check.mb-2
+                      input(type="radio" id="fast-delivery" name="delivery-method" value="50.000" class="form-check-input" )
+                      label(for="fast-delivery" class="mt-2") Giao hàng hỏa tốc
+                        div(class="delivery-content")
+                          span(class="text-date") 15-25 phút
+                          span(class="text-price") 50.000đ
+                  
+          .row.mt-3
+            .col-12
+              div(class="voucher-section bg-white rounded p-15 mb-10")
+                .d-flex.justify-content-between.align-items-center
+                  .voucher-label
+                    img(src="/uploads/icon-voucher.png" alt="Voucher" class="mr-2")
+                    span.font-weight-bold Food voucher
+                  span.font-weight-bold.code-voucher
+                  .voucher-action
+                    button(class="btn-voucher" data-bs-toggle="modal" data-bs-target="#voucherModal") Chọn Hoặc Nhập Mã        
         .col-5
           div(class="order-review bg-white rounded p-15 mb-10")
             div(class="entry-order-review mb-0 ")
@@ -77,13 +113,18 @@ block main
                             |#{product.priceNew.toLocaleString('vi-VN')}
                             span(class="currency-symbol") đ
           div(class="payment-method mb-10 bg-white rounded p-15 mt-2 form-group")
-            div(class="d-flex justify-content-between")
+            div(class="d-flex justify-content-between unit-price")
               span Đơn giá
-              span(class="text-right price-amount1")
+              span(class="text-right price-amount1 mb-1")
                 |#{product ? product.priceNew.toLocaleString('vi-VN') : cartDetail.totalPrice.toLocaleString('vi-VN')}
                 span(class="currency-symbol") đ
+            div(class="d-flex justify-content-between mb-1 discount-voucher")
+            div(class="d-flex justify-content-between mb-1 shipping-fee-container")
+              span Phí vận chuyển
+              span(class="text-right price-amount1")
+                span(class="currency-symbol") đ
             div(class="separation-dash mt-3 mb-3")
-            iv(class="d-flex justify-content-between mb-15")
+            div(class="d-flex justify-content-between mb-15 total-price")
               span Thành tiền
               span(class="text-right price-amount1")
                 |#{product ? product.priceNew.toLocaleString('vi-VN') : cartDetail.totalPrice.toLocaleString('vi-VN')}
@@ -92,4 +133,22 @@ block main
             a(href="/order/cart-info" class="color-main ") 
                 <i class="fa-solid fa-arrow-left mr-2"></i>
                 |Quay lại giỏ hàng
+    .modal.fade#voucherModal(tabindex='-1' aria-labelledby='voucherModalLabel' aria-hidden='true')
+      .modal-dialog
+          .modal-content
+              .modal-header
+                h5.modal-title#voucherModalLabel Chọn Voucher
+                button.close(type='button' data-bs-dismiss='modal' aria-label='Close') &times;
+              .voucher-error-container.hidden
+                .voucher-error-title Mã Voucher Không Hợp Lệ
+                .voucher-error-message Rất tiếc, mã voucher bạn vừa nhập không tồn tại hoặc đã hết hạn.
+                button.voucher-error-close Đóng
+              .input-section
+                input#voucher-input(type='text' placeholder='Nhập mã voucher tại đây')
+                button#save-btn Lưu
+              .modal-body
+                
+              .modal-footer
+                button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Hủy
+  div(id="notification" class="hidden" data-time=5000) Đã thêm playlist vào thư viện
   script(src="/js/checkout.js") 

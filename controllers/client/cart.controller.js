@@ -282,6 +282,10 @@ module.exports.checkoutPost=async (req,res)=>{
         res.redirect('/user/order')
     }
     else if(req.body.payment_method==2){
+        if(order_info.existCart){
+            await Cart.updateOne({_id:cartId},{products:[]})
+            delete order_info.existCart
+        }
         // redirecturl Redirect về url này sau khi thanh toán trên cổng ZaloPay
         const embed_data = {
             redirecturl:"https://fusion-food.vercel.app/user/order"
@@ -400,9 +404,6 @@ module.exports.info=async (req,res)=>{
             else{
                 product.quantity=1
             }
-            console.log(product.quantity)
-            console.log(product.stock)
-            console.log(product.stock<product.quantity)
             if(product.stock<product.quantity){
                 req.flash('error','Số lượng bạn chọn quá hàng trong kho')
                 res.redirect(`/detail/${req.params.slug}`)

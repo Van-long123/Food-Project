@@ -16,11 +16,11 @@ passport.use(new GoogleStrategy({
         if(profile?.id){
             const email=profile.emails[0]?.value
             const existUser=await User.findOne({
-                _id:profile.id,
+                googleId:profile.id,
             })
             if(!existUser){
                 const user=new User({
-                    _id:profile.id,
+                    googleId:profile.id,
                     email:email,
                     fullname:profile.displayName,
                     typeLogin:profile.provider,

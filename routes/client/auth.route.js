@@ -28,7 +28,7 @@ router.get('/google/callback', (req, res,next) =>{
         return 
     }
     const user=await User.findOne({
-        _id:req.user.id
+        googleId:req.user.id,
     })
     const cart=await Cart.findOne({user_id:user.id})
     if(cart){
