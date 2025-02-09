@@ -7,6 +7,8 @@ const generateHelper=require('../../helpers/generate')
 const sendMailHelper=require('../../helpers/sendMail')
 const productsHelper=require('../../helpers/product')
 const Product = require('../../model/product.model')
+const OrderInfo = require('../../model/order-info.model')
+const Voucher = require('../../model/voucher.model')
 module.exports.login=(req,res)=>{
     res.render('client/pages/user/login',{title:"Đăng nhập tài khoản"})
 }
@@ -178,6 +180,31 @@ module.exports.order=async (req,res)=>{
             },0)
             
             order.statusText= statusMap[order.status]
+            const orderInfo=await OrderInfo.findOne({
+                _id:order.orderInfoId
+            })
+            if(orderInfo.voucherId){
+                const voucher=await Voucher.findOne({
+                    _id:orderInfo.voucherId
+                })
+                if(voucher.discountType=="amount"){
+                    order.totalPrice-=voucher.discountValue
+                    order.discountVoucher=voucher.discountValue
+                }
+                else{
+                    const priceDiscount=(order.totalPrice*voucher.discountValue/100)
+                    if(priceDiscount>voucher.maxDiscountAmount){
+                        order.totalPrice -= voucher.maxDiscountAmount
+                        order.discountVoucher=voucher.maxDiscountAmount
+                    }
+                    else{
+                        order.totalPrice -= priceDiscount
+                        order.discountVoucher=priceDiscount
+                    }
+                }
+            }
+            order.deliveryFee=orderInfo.deliveryFee
+            order.totalPrice+=orderInfo.deliveryFee
         }
         res.render('client/pages/user/order',{
             title:'Thông tin đơn hàng',

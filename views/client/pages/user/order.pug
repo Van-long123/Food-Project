@@ -60,8 +60,14 @@ html(lang="en")
                         p Đơn hàng của bạn : 
                           span #{order.orderString}
                       .col-12
+                        p Voucher giảm giá : 
+                          span #{order.discountVoucher.toLocaleString('vi-VN')} VND
+                      .col-12
+                        p Phí vận chuyển : 
+                          span #{ order.deliveryFee.toLocaleString('vi-VN')} VND
+                      .col-12
                         p Tổng tiền : 
-                          span #{order.totalPrice} VND
+                          span #{order.totalPrice.toLocaleString('vi-VN')} VND
                       .col-12
                         p Trạng thái : 
                           span.status(class=`status-${order.status}`) #{order.statusText}
