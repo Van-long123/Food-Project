@@ -9,6 +9,7 @@ const orderSchema=new mongoose.Schema({
     // lưu hai thằng này để biết lấy ra đc các đơnh hàng có cartId hoặc user_id
     user_id:String,//họ đăng nhập rồi thì lưu thêm trường này
     cartId:String,//trường hợp chưa đăng nhập lưu thêm cartId
+    orderInfoId:String,
     status:String,
     //người ta chưa đăng nhập nhưng mua hàng thì thêm userinfo
     // khi đăng nhập rồi cũng cần này vì user_id có address,phone khác với userInfo

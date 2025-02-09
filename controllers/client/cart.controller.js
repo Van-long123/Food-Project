@@ -7,6 +7,7 @@ const productsHelper=require("../../helpers/product");
 const axios = require('axios').default; // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
+const Voucher = require("../../model/voucher.model");
 
 // này là môi trường Sandbox có sẵn rồi 
 // sau tích hợp với ứng dụng thật thì thay đổi các giá trị đó  Real	https://openapi.zalopay.vn/v2/create
@@ -254,10 +255,31 @@ module.exports.checkoutPost=async (req,res)=>{
         objectProduct.discountPercentage=productInfo.discountPercentage
         products.push(objectProduct)
     }
-    const priceTotal=parseFloat(products.reduce((total,item)=>{
+    
+    let priceTotal=parseFloat(products.reduce((total,item)=>{
         return total+=item.price*(1-(item.discountPercentage/100))*item.quantity
-    },0).toFixed(3))
+    },0).toFixed(3))+infoOrder.deliveryFee
+    console.log('priceTotal'+priceTotal)
+    if(infoOrder.voucherId){
+        const voucher=await Voucher.findOne({
+            _id:infoOrder.voucherId
+        })
+        console.log(voucher)
+        if(voucher.discountType=="amount"){
+            priceTotal-=voucher.discountValue
+        }else{
+            const priceDiscount=(priceTotal*voucher.discountValue/100)
+            if(priceTotal>voucher.maxDiscountAmount){
+                priceTotal -= voucher.maxDiscountAmount
+            }
+            else{
+                priceTotal -= priceDiscount
+            }
+        }
+    }
+
     const order_info={
+        orderInfoId:infoOrder.id,
         cartId:cartId,
         userInfo:user_info,
         products:products,
@@ -363,7 +385,17 @@ module.exports.creatCheckout=async (req,res)=>{
     else{
         code=Generate.generateRandomStringCode(9)
     }
-    const orderInfo=new OrderInfo({cartId,code,userInfo,products})
+
+    let data={
+        cartId,code,userInfo,products
+    }
+    if(req.body.deliveryFee){
+        data.deliveryFee=req.body.deliveryFee
+    }
+    if(req.body.voucherId){
+        data.voucherId=req.body.voucherId
+    }
+    const orderInfo=new OrderInfo(data)
     orderInfo.save()
     return res.json({
         success:'success',

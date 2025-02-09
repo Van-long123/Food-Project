@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const orderInfoSchema=new mongoose.Schema({
     cartId:String,
     code:String,
+    voucherId:String,
+    deliveryFee:Number,
     userInfo:{
         fullname:String,
         phone:String,

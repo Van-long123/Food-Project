@@ -139,7 +139,7 @@ wards.addEventListener('change', e => {
 
 const btn1a = document.querySelector('.btn-1a')
 if (btn1a) {
-    btn1a.addEventListener('click', e => {
+    btn1a.addEventListener('click', async e => {
         let checkInfo = true;
         const fullname = document.querySelector('input[name="full_name"]').value
         const phone = document.querySelector('input[name="phone"]').value
@@ -220,14 +220,41 @@ if (btn1a) {
             ids.push(`${id}-${position}`)
         })
         const productsId = ids.join(', ');
-
+        const deliveryFee=parseInt(document.querySelector('input[name="delivery-method"]:checked').value)*1000
+        if(!deliveryFee){
+            deliveryFee=20000
+        }
         let data = {
+            deliveryFee:deliveryFee,
             fullname: fullname, phone: phone,
             address: address,
             province: provinceValue,
             district: districtValue,
             ward: wardValue,
             products: productsId
+        }
+
+        const code=document.querySelector('.code')
+        if(code){
+            const codeText=code.textContent
+            const res=await fetch(`/vouchers/get-voucher-by-id/${codeText}`);
+            const resData=await res.json();
+            if(resData.voucher){
+                data.voucherId=resData.voucher._id
+            }
+            else{
+                checkInfo = false
+            }
+            // fetch(`/vouchers/get-voucher-by-id/${codeText}`)
+            //     .then(res=>res.json())
+            //     .then(data=>{
+            //         if(data.voucher){
+            //             console.log('ok')
+            //         }
+            //         else{
+            //             checkInfo = false
+            //         }
+            //     })
         }
 
         const url = new URL(window.location.href);
@@ -247,9 +274,14 @@ if (btn1a) {
                     }
                 },
                 error: function (error) {
-
+                    alert('error')
                 }
             })
+
+        }
+        else{
+            notification('Đã có lỗi xảy ra, vui lòng thử thanh toán lại sau!','#FF4C4C')
+
         }
     })
 }
@@ -260,7 +292,7 @@ if(inputCheckedAll){
     const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
     const unitPrice=document.querySelector('.unit-price').querySelector('.price-amount1')
     const discountVoucher=document.querySelector('.discount-voucher')
-
+    
     inputCheckedAll.forEach(input=>{
         if(input.checked){
             shippingFee.innerHTML=`
@@ -276,8 +308,7 @@ if(inputCheckedAll){
                 ${input.value}<span class="currency-symbol">đ</span>
             `
             let priceTotal=(parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(input.value))
-
-            if(discountVoucher){
+            if(discountVoucher.querySelector('.price-amount1')){
                 const discountVoucherValue=parseFloat(discountVoucher.querySelector('.price-amount1').textContent.slice(0,-1))
                 if(discountVoucherValue){
                     priceTotal = priceTotal-discountVoucherValue
@@ -308,7 +339,7 @@ if(btnVoucher){
                     if(vouchers.length>0){
                         htmls=vouchers.map(item=>{
                             return `
-                            <div class="voucher-card mb-3" data-id="${item._id}">
+                            <div class="voucher-card mb-3" data-id="${item.code}">
                                 <div class="voucher-left"><img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher" /><span>Toàn Ngành Hàng</span></div>
                                 <div class="voucher-right">
                                     <span class="use-now">Dùng ngay &gt;</span>
@@ -382,7 +413,7 @@ if(saveBtn){
                     const newDiv= document.createElement('div')
                     newDiv.classList.add('mb-3')
                     newDiv.innerHTML=`
-                        <div class="voucher-card">
+                        <div class="voucher-card" data-id="${item.code}">
                             <div class="voucher-left">
                                 <img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher">
                                 <span>Toàn Ngành Hàng</span>
@@ -406,6 +437,7 @@ if(saveBtn){
                     `
                     modalBody.prepend(newDiv);
                     // vouchers.innerHTML=newDiv;
+                    useVoucher()
                     notification('Bạn đã thêm voucher thành công!')
                 }
                 else{
@@ -421,8 +453,11 @@ if(saveBtn){
     })
 }
 
-function notification(msg){
+function notification(msg,background){
     const notification = document.getElementById('notification');
+    if(background){
+        notification.style.backgroundColor = background;
+    }
     const timeout=notification.getAttribute('data-time')
     notification.classList.remove('hidden')
     notification.classList.add('show')
@@ -440,8 +475,8 @@ function useVoucher(){
     useNow.forEach(item=>{
         item.addEventListener('click',e=>{
             const voucherCard=e.target.closest('.voucher-card')
-            const voucherId=voucherCard.getAttribute('data-id')
-            fetch(`/vouchers/get-voucher-by-id/${voucherId}`)
+            const code=voucherCard.getAttribute('data-id')
+            fetch(`/vouchers/get-voucher-by-id/${code}`)
                 .then(res=>res.json()
                 .then(data=>{
                     if(data.code==200){
@@ -449,6 +484,11 @@ function useVoucher(){
                         const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
                         const unitPrice=document.querySelector('.unit-price').querySelector('.price-amount1')
                         // lấy instance  của modal đã được Bootstrap khởi tạo trước đó.
+                        // Instance: Là đối tượng JavaScript được Bootstrap tạo ra khi modal được khởi tạo. 
+                        // Nó cho phép bạn tương tác với modal thông qua mã JavaScript, ví dụ như đóng hoặc mở modal, 
+                        // thay đổi nội dung của nó, v.v.
+                        // bootstrap.Modal.getInstance(): Phương thức này trả về instance của modal đã được Bootstrap
+                        //  khởi tạo cho phần tử có id là "voucherModal"
                         let modal = bootstrap.Modal.getInstance(document.getElementById("voucherModal"));
                         if (modal) {
                             modal.hide()
@@ -473,7 +513,7 @@ function useVoucher(){
                             
                         }
                         const priceTotal=((parseFloat(unitPrice.textContent.slice(0,-1))+parseInt(shippingFee.textContent.slice(0,-1)))*1000-discountValue).toLocaleString('vi-VN')
-                        codeVoucher.textContent=`Mã voucher: ${voucher.code}` 
+                        codeVoucher.innerHTML=`Mã voucher: <span class="code">${voucher.code}</span>` 
                         discountVoucher.innerHTML=`
                         <span>Voucher giảm giá</span><span class="text-right price-amount1 mb-1">${discountValue.toLocaleString('vi-VN')}<span class="currency-symbol">đ</span></span>
                         `

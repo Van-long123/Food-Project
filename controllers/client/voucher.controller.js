@@ -113,14 +113,14 @@ module.exports.GetMyVoucher=async(req,res)=>{
 }
 module.exports.getVoucherById=async(req,res)=>{
     try {
-        const id = req.params.id;
+        const code = req.params.id;
 
         
         const now=new Date()
         // Mongoose trả về các document dưới dạng đối tượng Mongoose, không phải object thuần của JavaScript.
         // Dùng .lean() giúp Mongoose trả về object thuần JavaScript thay vì Mongoose documents:
         const voucher=await Voucher.findOne({
-            _id:id,
+            code:code,
             deleted:false,
             status:'active',
             endDate:{$gt:now},
