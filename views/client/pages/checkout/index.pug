@@ -19,6 +19,14 @@ block main
                 //- option(value="1") Thanh toán bằng MOMO
                 option(value="2") Thanh toán bằng ZaloPay
               button(class="bg-main btn btn-1a payment-now color-white rounded py-10 px-20 w-100 mt-2") Thanh toán ngay
+          .row.mt-3
+            .col-12
+              div(class="voucher-section bg-white rounded p-15 mb-10")
+                .d-flex.justify-content-between.align-items-center
+                  .voucher-label
+                    img(src="/uploads/icon-voucher.png" alt="Voucher" class="mr-2")
+                    span.font-weight-bold Food voucher
+                  span.font-weight-bold.code-voucher Mã voucher: #{orderInfo.voucherCode}
         .col-5
           div(class="order-review bg-white rounded p-15 mb-10")
             div(class="entry-order-review mb-0 ")
@@ -39,13 +47,21 @@ block main
                           |#{cart.productInfo.totalPrice.toLocaleString('vi-VN')}
                           span(class="currency-symbol") đ
           div(class="payment-method mb-10 bg-white rounded p-15 mt-2 form-group")
-            div(class="d-flex justify-content-between")
+            div(class="d-flex justify-content-between mb-1")
               span Đơn giá
               span(class="text-right price-amount1")
-                |#{orderInfo.totalPrice.toLocaleString('vi-VN')}
+                |#{orderInfo.unitPrice.toLocaleString('vi-VN')}
+                span(class="currency-symbol") đ
+            div(class="d-flex justify-content-between mb-1 discount-voucher")
+              span Voucher giảm giá
+              span(class="text-right price-amount1") #{orderInfo.discountVoucher.toLocaleString('vi-VN')}
+                span(class="currency-symbol") đ
+            div(class="d-flex justify-content-between mb-1 shipping-fee-container")
+              span Phí vận chuyển
+              span(class="text-right price-amount1") #{orderInfo.deliveryFee.toLocaleString('vi-VN')}
                 span(class="currency-symbol") đ
             div(class="separation-dash mt-3 mb-3")
-            iv(class="d-flex justify-content-between mb-15")
+            div(class="d-flex justify-content-between mb-15")
               span Thành tiền
               span(class="text-right price-amount1")
                 |#{orderInfo.totalPrice.toLocaleString('vi-VN')}

@@ -223,9 +223,31 @@ module.exports.checkout=async (req,res)=>{
         productInfo.totalPrice=productInfo.priceNew*item.quantity
         item.productInfo=productInfo
     }
-    orderInfo.totalPrice=orderInfo.products.reduce((sum,item)=>{
+    orderInfo.unitPrice=parseFloat(orderInfo.products.reduce((sum,item)=>{
         return sum+item.productInfo.totalPrice
-    },0)
+    },0))
+    orderInfo.totalPrice=orderInfo.unitPrice+orderInfo.deliveryFee
+    if(orderInfo.voucherId){
+        const voucher=await Voucher.findOne({
+            _id:orderInfo.voucherId
+        })
+        orderInfo.voucherCode=voucher.code
+        if(voucher.discountType=="amount"){
+            orderInfo.totalPrice-=voucher.discountValue
+            orderInfo.discountVoucher=voucher.discountValue
+        }else{
+            const priceDiscount=(orderInfo.totalPrice*voucher.discountValue/100)
+            
+            if(priceDiscount>voucher.maxDiscountAmount){
+                orderInfo.totalPrice -= voucher.maxDiscountAmount
+                orderInfo.discountVoucher=voucher.maxDiscountAmount
+            }
+            else{
+                orderInfo.totalPrice -= priceDiscount
+                orderInfo.discountVoucher=priceDiscount
+            }
+        }
+    }
     res.render('client/pages/checkout/index',{title:"Thanh toán đơn hàng",orderInfo:orderInfo})
 }
 module.exports.checkoutPost=async (req,res)=>{
@@ -269,11 +291,12 @@ module.exports.checkoutPost=async (req,res)=>{
             priceTotal-=voucher.discountValue
         }else{
             const priceDiscount=(priceTotal*voucher.discountValue/100)
-            if(priceTotal>voucher.maxDiscountAmount){
+            if(priceDiscount>voucher.maxDiscountAmount){
                 priceTotal -= voucher.maxDiscountAmount
             }
             else{
                 priceTotal -= priceDiscount
+
             }
         }
     }
@@ -304,10 +327,10 @@ module.exports.checkoutPost=async (req,res)=>{
         res.redirect('/user/order')
     }
     else if(req.body.payment_method==2){
-        if(order_info.existCart){
-            await Cart.updateOne({_id:cartId},{products:[]})
-            delete order_info.existCart
-        }
+        // if(order_info.existCart){
+        //     await Cart.updateOne({_id:cartId},{products:[]})
+        //     delete order_info.existCart
+        // }
         // redirecturl Redirect về url này sau khi thanh toán trên cổng ZaloPay
         const embed_data = {
             redirecturl:"https://fusion-food.vercel.app/user/order"
