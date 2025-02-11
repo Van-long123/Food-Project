@@ -3,6 +3,9 @@ const Routes = express.Router()
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const Order = require('../../model/order.model');
 const Cart = require('../../model/cart.model');
+const OrderInfo = require('../../model/order-info.model');
+const Voucher = require('../../model/voucher.model');
+const User = require('../../model/user.model');
 const config = {
   key2: process.env.KEY2
 };
@@ -30,12 +33,31 @@ Routes.post('/', async(req, res) => {
                 let dataJson = JSON.parse(dataStr);
                 let data = JSON.parse(dataJson.item);
                 let order_info = data[0];
-                console.log(order_info)
+                console.log('order_info: ' + order_info)
+                if(order_info.user_id){
+                    if(order_info.voucherId){
+                        await User.updateOne({
+                            _id:order_info.user_id,
+                            'vouchers.voucherId':order_info.voucherId
+                        },{
+                            $set:{
+                                'vouchers.$.usedAt':new Date(),
+                                'vouchers.$.status':'used'
+                            }
+                        })
+                        await Voucher.updateOne({
+                            _id:order_info.voucherId
+                        },{
+                            $inc:{
+                                usedCount:1
+                            }
+                        })
+                    }
+                }
                 if(order_info.existCart){
                     await Cart.updateOne({_id:order_info.cartId},{products:[]})
                     delete order_info.existCart
                 }
-                // console.log(order_info)
                 const order=new Order(order_info)
                 await order.save()
             } catch (error) {

@@ -8,6 +8,7 @@ const axios = require('axios').default; // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
 const Voucher = require("../../model/voucher.model");
+const User = require("../../model/user.model");
 
 // này là môi trường Sandbox có sẵn rồi 
 // sau tích hợp với ứng dụng thật thì thay đổi các giá trị đó  Real	https://openapi.zalopay.vn/v2/create
@@ -320,6 +321,26 @@ module.exports.checkoutPost=async (req,res)=>{
             await Cart.updateOne({_id:cartId},{products:[]})
             delete order_info.existCart
         }
+        if(order_info.user_id){
+            if(infoOrder.voucherId){
+                await User.updateOne({
+                    _id:order_info.user_id,
+                    'vouchers.voucherId':infoOrder.voucherId
+                },{
+                    $set:{
+                        'vouchers.$.usedAt':new Date(),
+                        'vouchers.$.status':'used'
+                    }
+                })
+                await Voucher.updateOne({
+                    _id:infoOrder.voucherId
+                },{
+                    $inc:{
+                        usedCount:1
+                    }
+                })
+            }
+        }
         const order=new Order(order_info)
         await order.save()
         
@@ -327,6 +348,9 @@ module.exports.checkoutPost=async (req,res)=>{
         res.redirect('/user/order')
     }
     else if(req.body.payment_method==2){
+        if(infoOrder.voucherId){
+            order_info.voucherId=infoOrder.voucherId
+        }
         // if(order_info.existCart){
         //     await Cart.updateOne({_id:cartId},{products:[]})
         //     delete order_info.existCart

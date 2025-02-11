@@ -14,7 +14,8 @@ module.exports.index=async(req,res)=>{
         _id:{$in:voucherIds},
         deleted:false,
         status:'active',
-        endDate:{$gt:now}
+        endDate:{$gt:now},
+        $expr: { $lt: ["$usedCount", "$quantity"] } 
     })
     for (const voucher of vouchers) {
         voucher.progress=(voucher.usedCount/voucher.quantity*100).toFixed(1)
@@ -33,7 +34,8 @@ module.exports.checkVoucher=async(req,res)=>{
             code:code,
             deleted:false,
             status:'active',
-            endDate:{$gt:now}
+            endDate:{$gt:now},
+            $expr: { $lt: ["$usedCount", "$quantity"] }
         }
         if(req.params.price){
             const price = parseInt(req.params.price)*1000;
@@ -91,6 +93,7 @@ module.exports.GetMyVoucher=async(req,res)=>{
             endDate:{$gt:now},
             // 35,100                 120,25  ,75 
             minOrderValue:{$lt:price},
+            $expr: { $lt: ["$usedCount", "$quantity"] }
         }).lean()
         // khi trả dữ liêu về dạng json thì voucher.progress sẽ ko được thêm vào voucher vì 
         // vouchers là đối tượng Mongoose chỉ tồn tại trong bộ nhớ nhưng không thực sự được thêm vào dữ liệu trả về.
@@ -124,6 +127,7 @@ module.exports.getVoucherById=async(req,res)=>{
             deleted:false,
             status:'active',
             endDate:{$gt:now},
+            $expr: { $lt: ["$usedCount", "$quantity"] }
         }).lean()
         // khi trả dữ liêu về dạng json thì voucher.progress sẽ ko được thêm vào voucher vì 
         // vouchers là đối tượng Mongoose chỉ tồn tại trong bộ nhớ nhưng không thực sự được thêm vào dữ liệu trả về.

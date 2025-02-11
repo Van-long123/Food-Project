@@ -19,7 +19,7 @@ block main
                 //- option(value="1") Thanh toán bằng MOMO
                 option(value="2") Thanh toán bằng ZaloPay
               button(class="bg-main btn btn-1a payment-now color-white rounded py-10 px-20 w-100 mt-2") Thanh toán ngay
-          if(user)
+          if(orderInfo.voucherCode)
             .row.mt-3
               .col-12
                 div(class="voucher-section bg-white rounded p-15 mb-10")
