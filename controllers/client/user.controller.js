@@ -206,6 +206,7 @@ module.exports.order=async (req,res)=>{
             order.deliveryFee=orderInfo.deliveryFee
             order.totalPrice+=orderInfo.deliveryFee
         }
+        console.log(orders[0].discountVoucher)
         res.render('client/pages/user/order',{
             title:'Thông tin đơn hàng',
             orders:orders

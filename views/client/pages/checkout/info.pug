@@ -65,17 +65,17 @@ block main
                         div(class="delivery-content")
                           span(class="text-date") 15-25 phút
                           span(class="text-price") 50.000đ
-                  
-          .row.mt-3
-            .col-12
-              div(class="voucher-section bg-white rounded p-15 mb-10")
-                .d-flex.justify-content-between.align-items-center
-                  .voucher-label
-                    img(src="/uploads/icon-voucher.png" alt="Voucher" class="mr-2")
-                    span.font-weight-bold Food voucher
-                  span.font-weight-bold.code-voucher
-                  .voucher-action
-                    button(class="btn-voucher" data-bs-toggle="modal" data-bs-target="#voucherModal") Chọn Hoặc Nhập Mã        
+          if(user)        
+            .row.mt-3
+              .col-12
+                div(class="voucher-section bg-white rounded p-15 mb-10")
+                  .d-flex.justify-content-between.align-items-center
+                    .voucher-label
+                      img(src="/uploads/icon-voucher.png" alt="Voucher" class="mr-2")
+                      span.font-weight-bold Food voucher
+                    span.font-weight-bold.code-voucher
+                    .voucher-action
+                      button(class="btn-voucher" data-bs-toggle="modal" data-bs-target="#voucherModal") Chọn Hoặc Nhập Mã        
         .col-5
           div(class="order-review bg-white rounded p-15 mb-10")
             div(class="entry-order-review mb-0 ")
