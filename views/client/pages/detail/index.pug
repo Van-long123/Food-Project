@@ -15,9 +15,10 @@ block main
                 .judge-comment
                     if(hasReviewed)
                         .img-profile
-                            span.name-tag #{(user) ? user.fullname : "No Name"}
+                            
+                            span.name-tag #{(user) ?  user.fullname : "No Name"}
                         .rating
-                            span Đánh giá sản phẩm này 
+                            b <i>Đánh giá sản phẩm này:</i>
                             br
                             .stars(data-rating)
                                 span(data-star="1")
@@ -32,7 +33,7 @@ block main
                                     i.fa-solid.fa-star
                 div(class="judge mt-2")
                     div(class="info-profile" id="dsbinhluan")
-                        
+                        b <i>Nhận xét từ người dùng:</i>
                         each comment in comments
                             div
                                 span(class="name-tag") #{comment.fullname}: 

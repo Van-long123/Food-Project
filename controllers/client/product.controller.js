@@ -166,7 +166,8 @@ module.exports.comment=async(req,res)=>{
                     message:'Bạn chỉ có thể nhận xét đơn hàng khi đã nhận hàng!',
                 })
             }
-            order.hasCommented=true;
+            order.hasCommented=false;
+            // order.hasCommented=true;
             await order.save()
         }
         else{

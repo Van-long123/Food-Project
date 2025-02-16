@@ -142,13 +142,17 @@ module.exports.resetPasswordPost=async(req,res)=>{
         tokenUser:tokenUser,
     })
     if(!user){
-        req.flash('error', `Token ko hợp lệ!`);
-        res.redirect(`back`);
+        res.json({
+            code:400,
+            message:"Người dùng ko tồn tại!"
+        })
         return;
     }
     await User.updateOne({tokenUser:tokenUser},{password:md5(password)})
-    req.flash('success', `Đổi mật khẩu thành công`);
-    res.redirect('back')
+    return res.json({
+        code:200,
+        message:"Đổi mật khẩu thành công!"
+    })
 }
 module.exports.order=async (req,res)=>{
     // status text 
@@ -222,4 +226,46 @@ module.exports.orderDelete=async (req, res) => {
     await Order.updateOne({_id:id},{deleted:true})
     req.flash('success', 'Đã hủy đơn hàng thành công');
     res.redirect('back');
+}
+module.exports.detail=async (req, res) => {
+    if(!res.locals.user){
+        res.redirect('/user/login')
+    }
+    const userVouchers=res.locals.user?.vouchers;
+    const voucherIds = userVouchers.map(item=>{
+        if(item.status=='unused'){
+            return item.voucherId
+        }
+    })
+    const now=new Date()
+    const vouchers=await Voucher.find({
+        _id:{$in:voucherIds},
+        deleted:false,
+        status:'active',
+        endDate:{$gt:now},
+        $expr: { $lt: ["$usedCount", "$quantity"] } 
+    })
+    for (const voucher of vouchers) {
+        voucher.progress=(voucher.usedCount/voucher.quantity*100).toFixed(1)
+    }
+    res.render('client/pages/user/detail',{
+        title:'Thông tin cá nhân',
+        vouchers
+    })
+}
+module.exports.updateProfile=async (req, res) => {
+    if(!res.locals.user){
+        res.redirect('/user/login')
+    }
+    const emailExists=await User.findOne({_id:{$ne:res.locals.user.id},email:req.body.email,typeLogin:res.locals.user.typeLogin,deleted:false})
+    if(emailExists){
+        req.flash('error', `Email ${req.body.email} đã tồn tại`);
+        res.redirect(`back`)
+        return;
+    }
+    else{
+        await User.updateOne({_id:res.locals.user.id},req.body)
+        req.flash('success', `Cập nhật thành công`);
+    }
+    res.redirect('/user/detail') 
 }

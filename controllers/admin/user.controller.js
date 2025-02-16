@@ -155,7 +155,7 @@ module.exports.editPatch=async(req,res)=>{
     if(!permissions.includes("users_edit")){
         return;
     }
-    const emailExists=await User.findOne({_id:{$ne:req.params.id},email:req.body.email,deleted:false})
+    const emailExists=await User.findOne({_id:{$ne:req.params.id},typeLogin: 'normal',email:req.body.email,deleted:false})
     if(emailExists){
         req.flash('error', `Email ${req.body.email} đã tồn tại`);
         res.redirect(`back`)

@@ -22,7 +22,8 @@ module.exports.upload=function (req, res, next) {
                     }
                   }
                 );
-    
+              console.log(req.file)
+              console.log(req.file.buffer)
               streamifier.createReadStream(req.file.buffer).pipe(stream);
             });
         };

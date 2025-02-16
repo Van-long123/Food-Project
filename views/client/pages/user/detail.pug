@@ -1,0 +1,152 @@
+extend ../../layouts/default 
+include ../../mixins/alert.pug
+
+block main     
+    div.user-detail
+        div.container.mt-2.mb-5
+            div.row
+                div.col-md-3.sidebar
+                    div.d-flex.align-items-center
+                        div.profile-icon
+                            i.fas.fa-user
+                        div.ms-2
+                            h6.mb-0 #{user.fullname}
+                            small.text-muted
+                                i.fas.fa-pen
+                                |  Chỉnh sửa
+                    br
+                    div
+                        a.sidebar-item.active(href="#" data-target="account")
+                            i.fas.fa-user-circle
+                            |  Tài khoản của tôi
+                        a.sidebar-item(href="javascript:;" data-target="voucher")
+                            i.fas.fa-ticket-alt
+                            |  Kho voucher
+                        a.sidebar-item(href="javascript:;" data-target="password")
+                            i.fas.fa-key
+                            |  Đổi mật khẩu
+                        a.sidebar-item.text-danger(href="/" data-target="exist")
+                            i.fas.fa-sign-out-alt
+                            |  Thoát
+                
+                div.col-md-8.main-content
+                    div.content-section(id="account")
+                        h4 HỒ SƠ CỦA TÔI
+                        p.text-muted Quản lý thông tin hồ sơ để bảo mật tài khoản
+                        if(messages.success)
+                            div(id="notification" class="show"  data-time=5000) #{messages.success}
+                        if (messages.error)
+                            div(id="notification" class="show" style="background-color: #FF4C4C;" data-time=5000) #{messages.error}
+                        form(class="profileForm"  action=`/user/update-profile?_method=PATCH`, method="POST" enctype="multipart/form-data")
+                            .row.mb-3
+                                label.col-sm-3 Ảnh đại diện
+                                .col-sm-9.text-center
+                                    .avatar-container
+                                        img#avatar-preview.avatar(src="" alt="Avatar" upload-image-preview)
+                                        .label-upload
+                                            label.btn.btn-outline-primary(for="avatar-input") Chọn ảnh
+                                            span#file-name.text-muted.ml-2 Không có tệp nào được chọn
+                                            input#avatar-input(type="file" name="avatar" accept="image/*" hidden upload-image-input)
+
+                            
+                            
+                            .row.mb-3
+                                label.col-sm-3 Họ Và Tên
+                                .col-sm-9
+                                    input.form-control(type="text" name="fullname" value=user.fullname)
+                                    if(messages.nameError)
+                                        lable(id="name-error" class="error invalid-feedback1" for="fullname" style="display:block") #{messages.nameError} 
+                                    lable(id="name-error" class="error invalid-feedback1" for="full_name" ) Vui lòng nhập họ và tên
+                            .row.mb-3
+                                label.col-sm-3 Email
+                                .col-sm-9
+                                    input.form-control(type="email" name="email" value=user.email)
+                                    if(messages.emailError)
+                                        lable(id="email-error" class="error invalid-feedback1" for="full_name" style="display:block") #{messages.emailError} 
+                                    lable(id="email-error" class="error invalid-feedback1" for="full_name" ) Vui lòng nhập email
+                            .row.mb-3
+                                label.col-sm-3 Số điện thoại
+                                .col-sm-9
+                                    input.form-control(type="tel" name="phone" value=user.phone)
+                                    if(messages.phoneError)
+                                        lable(id="phone-error" class="error invalid-feedback1" for="phone" style="display:block") #{messages.phoneError} 
+                                    lable(id="phone-error" class="error invalid-feedback1" for="phone" ) Vui lòng nhập số điện thoại
+                                    lable(id="phone-error-format" class="error invalid-feedback1" for="phone" ) Số điện thoại ko đúng định dạng
+                            .row.mb-3
+                                label.col-sm-3 Địa chỉ
+                                .col-sm-9
+                                    input.form-control(type="text" name="address" value=user.address)
+                                    if(messages.addressError)
+                                        lable(id="address-error" class="error invalid-feedback1" for="address" style="display:block") #{messages.addressError} 
+                                    lable(id="address-error" class="error invalid-feedback1" for="address" ) Vui lòng nhập địa chỉ
+                            //- .row.mb-3
+                            //-     label.col-sm-3 Giới tính
+                            //-     .col-sm-9
+                            //-         .form-check.form-check-inline
+                            //-             input.form-check-input(type="radio" name="gender" value="male" checked)
+                            //-             label.form-check-label Nam
+                            //-         .form-check.form-check-inline
+                            //-             input.form-check-input(type="radio" name="gender" value="female")
+                            //-             label.form-check-label Nữ
+                            //-         .form-check.form-check-inline
+                            //-             input.form-check-input(type="radio" name="gender" value="other")
+                            //-             label.form-check-label Khác
+                            
+                            .text-end
+                                button.btn.btn-action.btn-save(type="submit") Lưu
+                    div#voucher.content-section(style="display: none;")
+                        h4 KHO VOUCHER
+                        p Danh sách các voucher giảm giá của bạn.
+                        .container.mt-3.mb-5         
+                            //- .voucher-header Kho Voucher Của Tôi         
+
+                            .voucher-error-container.hidden
+                                .voucher-error-title Mã Voucher Không Hợp Lệ
+                                .voucher-error-message Rất tiếc, mã voucher bạn vừa nhập không tồn tại hoặc đã hết hạn.
+                                button.voucher-error-close Đóng
+
+                            .input-section             
+                                input#voucher-input(type='text' placeholder='Nhập mã voucher tại đây')             
+                                button#save-btn Lưu                       
+                            
+                            .row.vouchers             
+                                if vouchers.length < 1                 
+                                    .no-voucher-container                     
+                                        p.no-voucher-text Bạn chưa có voucher nào. Hãy tìm kiếm và nhận ngay!              
+                                else                     
+                                    each item in vouchers                     
+                                        .col-md-6.mb-3                         
+                                            .voucher-card                             
+                                                .voucher-left                                 
+                                                    img(src='https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72' alt='Voucher')                                 
+                                                    span Toàn Ngành Hàng                             
+                                                .voucher-right                                 
+                                                    a(href="/products")                                     
+                                                        span.use-now Dùng ngay &gt;                                 
+                                                    .voucher-title Giảm #{item.discountValue.toLocaleString('vi-VN') }#{item.discountType=='percent' ? '%' : 'đ'}                                 
+                                                    .voucher-details Giảm tối đa #{item.maxDiscountAmount.toLocaleString('vi-VN')}đ Đơn tối thiểu #{item.minOrderValue.toLocaleString('vi-VN')}đ                                 
+                                                    .voucher-usage                                     
+                                                        .progress-bar                                         
+                                                            .progress-fill(style=`width: ${item.progress}%;`)                                     
+                                                        | Đã dùng #{item.progress}%
+                    div#password.content-section(style="display: none;")
+                        h4 ĐỔI MẬT KHẨU
+                        .mainDiv
+                            .cardStyle
+                                form#signupForm(method="POST", action="/user/password/reset")
+                                    img(src="/uploads/SHIPSY_LOGO_BIRD_BLUE.png" id="signupLogo")
+                                    h2.formTitle Đổi mật khẩu
+                                    .inputDiv
+                                        label.inputLabel(for="password") Mật khẩu mới
+                                        input#password(type="password", name="password" )
+
+                                    .inputDiv
+                                        label.inputLabel(for="confirmPassword") Xác nhận mật khẩu
+                                        input#confirmPassword(type="password", name="confirmPassword")   
+
+                                    .buttonWrapper
+                                        button.submitButton.pure-button.pure-button-primary(type="submit")
+                                            span Xác nhận
+    div(id="notification" class="hidden" data-time=5000) 
+    script(src='/js/user-detail.js')
+    script(src='/js/voucher.js')

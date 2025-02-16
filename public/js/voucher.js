@@ -32,7 +32,7 @@ if(saveBtn){
                     const vouchers=document.querySelector('.vouchers')
                     const progress=(item.usedCount/item.quantity*100).toFixed(1)
                     const newDiv= document.createElement('div')
-                    newDiv.classList.add('col-md-4', 'mb-3')
+                    newDiv.classList.add('col-md-6', 'mb-3')
                     newDiv.innerHTML=`
                         <div class="voucher-card">
                             <div class="voucher-left">
@@ -75,15 +75,3 @@ if(saveBtn){
     })
 }
 
-function notification(msg){
-    const notification = document.getElementById('notification');
-    const timeout=notification.getAttribute('data-time')
-    notification.classList.remove('hidden')
-    notification.classList.add('show')
-
-    notification.textContent=msg
-    setTimeout(() => {
-        notification.classList.remove('show')
-        notification.classList.add('hidden')
-    },timeout );
-}

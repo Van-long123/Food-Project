@@ -1,5 +1,8 @@
 const express = require('express')
 const router=express.Router();
+const multer=require("multer");
+const upload=multer();
+const uploadCloud=require('../../middleware/admin/uploadCloud.middleware')
 const controller=require("../../controllers/client/user.controller")
 const middleware=require("../../middleware/client/auth.middleware")
 const validate=require("../../validates/client/user.validate")
@@ -16,4 +19,10 @@ router.get('/password/reset',controller.resetPassword)
 router.post('/password/reset',validate.resetPasswordPost,controller.resetPasswordPost)
 router.get('/order',controller.order)
 router.delete('/order/delete/:id',controller.orderDelete)
+
+
+router.get('/detail',controller.detail)
+router.patch('/update-profile',upload.single('avatar'),validate.infoUser,uploadCloud.upload,controller.updateProfile)
+// router.patch('/update-profile',validate.infoUser,controller.updateProfile)
+
 module.exports = router
