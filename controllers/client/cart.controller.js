@@ -451,6 +451,7 @@ module.exports.creatCheckout=async (req,res)=>{
 }
 module.exports.info=async (req,res)=>{
     try {
+        let price;
         if(!req.params.slug){
             var cart=await Cart.findOne({_id:req.cookies.cartId})
             if(cart.products.length>0){
@@ -464,6 +465,8 @@ module.exports.info=async (req,res)=>{
                 cart.totalPrice=cart.products.reduce((sum,item)=>{
                     return sum+item.productInfo.totalPrice
                 },0)
+                price=cart.totalPrice
+
             }
         }
         else{
@@ -488,13 +491,41 @@ module.exports.info=async (req,res)=>{
                 res.redirect(`/detail/${req.params.slug}`)
                 return;
             }
-            
+            price=product.priceNew
         }
-    
+        
+        // voucher 
+        const userVouchers=res.locals.user?.vouchers;
+        const voucherIds = userVouchers.map(item=>{
+            if(item.status=='unused'){
+                return item.voucherId
+            }
+        })
+        const now=new Date()
+        // Mongoose trả về các document dưới dạng đối tượng Mongoose, không phải object thuần của JavaScript.
+        // Dùng .lean() giúp Mongoose trả về object thuần JavaScript thay vì Mongoose documents:
+        console.log(price)
+        const vouchers=await Voucher.find({
+            _id:{$in:voucherIds},
+            deleted:false,
+            status:'active',
+            endDate:{$gt:now},
+            // 35,100                 120,25  ,75 
+            minOrderValue:{$lt:price},
+            $expr: { $lt: ["$usedCount", "$quantity"] }
+        }).lean()
+        // khi trả dữ liêu về dạng json thì voucher.progress sẽ ko được thêm vào voucher vì 
+        // vouchers là đối tượng Mongoose chỉ tồn tại trong bộ nhớ nhưng không thực sự được thêm vào dữ liệu trả về.
+
+        for (const voucher of vouchers) {
+            voucher.progress=(voucher.usedCount/voucher.quantity*100).toFixed(1)
+        }
+        // voucher 
         res.render('client/pages/checkout/info',{
             title:"Thông tin đơn hàng",
             cartDetail:cart,
-            product:product
+            product:product,
+            vouchers:vouchers
         })
     } catch (error) {
         res.redirect('/')

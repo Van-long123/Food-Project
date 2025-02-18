@@ -323,53 +323,53 @@ if(inputCheckedAll){
 }
 
 // display voucher 
-const btnVoucher=document.querySelector('.btn-voucher')
-if(btnVoucher){
-    btnVoucher.addEventListener('click',e=>{
-        const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
-        const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
+// const btnVoucher=document.querySelector('.btn-voucher')
+// if(btnVoucher){
+//     btnVoucher.addEventListener('click',e=>{
+//         const totalPrice=document.querySelector('.total-price').querySelector('.price-amount1')
+//         const shippingFee=document.querySelector('.shipping-fee-container').querySelector('.price-amount1')
 
-        const priceTotal=(parseFloat(totalPrice.textContent.slice(0,-1))-parseFloat(shippingFee.textContent.slice(0,-1))).toFixed(3)
-        fetch(`/vouchers/get-my-voucher/${priceTotal}`)
-            .then(res=>res.json())
-            .then(data=>{
-                if(data.code==200){
-                    const vouchers=data.vouchers
-                    let htmls;
-                    if(vouchers.length>0){
-                        htmls=vouchers.map(item=>{
-                            return `
-                            <div class="voucher-card mb-3" data-id="${item.code}">
-                                <div class="voucher-left"><img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher" /><span>Toàn Ngành Hàng</span></div>
-                                <div class="voucher-right">
-                                    <span class="use-now">Dùng ngay &gt;</span>
-                                    <div class="voucher-title">Giảm ${item.discountValue.toLocaleString('vi-VN') }${item.discountType=='percent' ? '%' : 'đ'}  </div>
-                                    <div class="voucher-details">Giảm tối đa ${item.maxDiscountAmount.toLocaleString('vi-VN')}đ</div>
-                                    <div class="progress-bar"><div class="progress-fill" style="width: ${item.progress}%;"></div></div>
-                                    <div class="voucher-usage">Đã dùng ${item.progress}%  </div>
-                                </div>
-                            </div>
-                            `
-                        })
-                    }
-                    else{
-                        htmls=[`
-                        <div class="no-voucher-container">
-                            <p class="no-voucher-text">Bạn chưa có voucher nào. Hãy tìm kiếm và nhận ngay!</p>
-                        </div>                     
-                        `]
-                    }
+//         const priceTotal=(parseFloat(totalPrice.textContent.slice(0,-1))-parseFloat(shippingFee.textContent.slice(0,-1))).toFixed(3)
+//         fetch(`/vouchers/get-my-voucher/${priceTotal}`)
+//             .then(res=>res.json())
+//             .then(data=>{
+//                 if(data.code==200){
+//                     const vouchers=data.vouchers
+//                     let htmls;
+//                     if(vouchers.length>0){
+//                         htmls=vouchers.map(item=>{
+//                             return `
+//                             <div class="voucher-card mb-3" data-id="${item.code}">
+//                                 <div class="voucher-left"><img src="https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72" alt="Voucher" /><span>Toàn Ngành Hàng</span></div>
+//                                 <div class="voucher-right">
+//                                     <span class="use-now">Dùng ngay &gt;</span>
+//                                     <div class="voucher-title">Giảm ${item.discountValue.toLocaleString('vi-VN') }${item.discountType=='percent' ? '%' : 'đ'}  </div>
+//                                     <div class="voucher-details">Giảm tối đa ${item.maxDiscountAmount.toLocaleString('vi-VN')}đ</div>
+//                                     <div class="progress-bar"><div class="progress-fill" style="width: ${item.progress}%;"></div></div>
+//                                     <div class="voucher-usage">Đã dùng ${item.progress}%  </div>
+//                                 </div>
+//                             </div>
+//                             `
+//                         })
+//                     }
+//                     else{
+//                         htmls=[`
+//                         <div class="no-voucher-container">
+//                             <p class="no-voucher-text">Bạn chưa có voucher nào. Hãy tìm kiếm và nhận ngay!</p>
+//                         </div>                     
+//                         `]
+//                     }
                     
-                    const modalBody=document.querySelector('.modal-body')
-                    modalBody.innerHTML=htmls.join(' ')
-                    useVoucher()
-                }
-                else{
-                    alert(data.message)
-                }
-            })
-    })
-}
+//                     const modalBody=document.querySelector('.modal-body')
+//                     modalBody.innerHTML=htmls.join(' ')
+//                     useVoucher()
+//                 }
+//                 else{
+//                     alert(data.message)
+//                 }
+//             })
+//     })
+// }
 // display voucher 
 
 // add voucher 
@@ -529,3 +529,4 @@ function useVoucher(){
         })
     })
 }
+useVoucher()

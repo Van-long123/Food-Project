@@ -147,7 +147,23 @@ block main
                 input#voucher-input(type='text' placeholder='Nhập mã voucher tại đây')
                 button#save-btn Lưu
               .modal-body
-                
+                if vouchers.length < 1                 
+                  .no-voucher-container                     
+                    p.no-voucher-text Bạn chưa có voucher nào. Hãy tìm kiếm và nhận ngay!              
+                else                     
+                    each item in vouchers                     
+                      .voucher-card.mb-3(data-id=item.code)                   
+                        .voucher-left                                 
+                          img(src='https://down-vn.img.susercontent.com/file/vn-11134004-7ras8-m4re2imocx9s72' alt='Voucher')                                 
+                          span Toàn Ngành Hàng                             
+                        .voucher-right                                 
+                          span.use-now Dùng ngay &gt;                                 
+                          .voucher-title Giảm #{item.discountValue.toLocaleString('vi-VN') }#{item.discountType=='percent' ? '%' : 'đ'}                                 
+                          .voucher-details Giảm tối đa #{item.maxDiscountAmount.toLocaleString('vi-VN')}đ
+                          .voucher-usage                                     
+                              .progress-bar                                         
+                                  .progress-fill(style=`width: ${item.progress}%;`)                                     
+                              | Đã dùng #{item.progress}%
               .modal-footer
                 button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Hủy
   div(id="notification" class="hidden" data-time=5000) Đã thêm playlist vào thư viện
