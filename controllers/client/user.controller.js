@@ -169,7 +169,6 @@ module.exports.order=async (req,res)=>{
         const orders=await Order.find({cartId:cartId,deleted:false}).sort({'createdAt':'desc'})
         for (const order of orders) {
             order.products=productsHelper.priceNewproduct(order.products)
-            // console.log(order.products)
             let orderString = "";
             for (const product of order.products) {
                 const productInfo=await Product.findOne({_id:product.product_id}).select('title')
@@ -210,7 +209,6 @@ module.exports.order=async (req,res)=>{
             order.deliveryFee=orderInfo.deliveryFee
             order.totalPrice+=orderInfo.deliveryFee
         }
-        console.log(orders[0].discountVoucher)
         res.render('client/pages/user/order',{
             title:'Thông tin đơn hàng',
             orders:orders

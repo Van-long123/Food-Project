@@ -188,18 +188,62 @@ body {
 }
 
 .status-Initit {
-  background-color: #b0b0b0; /* Xám nhạt */
+    background-color: #b0b0b0;
+    /* Xám nhạt */
 }
 
 .status-Confirm {
-  background-color: #4db8ff; /* Xanh dương nhạt */
+    background-color: #4db8ff;
+    /* Xanh dương nhạt */
 }
 
 .status-Shipped {
-  background-color: #ffcc00; /* Vàng */
+    background-color: #ffcc00;
+    /* Vàng */
 }
 
 .status-Delivered {
-  background-color: #66cc66; /* Xanh lá cây */
+    background-color: #66cc66;
+    /* Xanh lá cây */
 }
 
+/* empty order  */
+.empty-orders {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-orders i {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-orders h3 {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.empty-orders p {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.shop-now-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.shop-now-btn:hover {
+    background-color: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+.empty-orders .shop-now-btn i {
+    font-size: 20px;
+}
+/* empty order  */

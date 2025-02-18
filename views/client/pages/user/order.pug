@@ -34,49 +34,58 @@ html(lang="en")
                     data-time=55000
                 )   #{messages.success} <i class="fa-solid fa-xmark" close-alert1></i>
               +alert-error(5000)
-          each order in orders
-            .row.mt-4
-              .col
-                .card
-                  .card-body
-                    .row
-                      .col-12
-                          p Thời gian đặt : 
-                            span #{moment(order.createdAt).format('DD/MM/YYYY HH:mm:ss')}
-                      .col-12
-                        p Họ và tên : 
-                          span #{order.userInfo.fullName}
-                      .col-12
-                        p Số điện thoại : 
-                          span #{order.userInfo.phone}
-                      .col-12
-                        p Địa chỉ : 
-                          span #{order.userInfo.address}
-                      .col-12
-                        p Phương thức thanh toán : 
-                          span
-                            | Thanh toán khi nhận hàng
-                      .col-12
-                        p Đơn hàng của bạn : 
-                          span #{order.orderString}
-                      .col-12
-                        p Voucher giảm giá : 
-                          if(order.discountVoucher)
-                            span #{order.discountVoucher.toLocaleString('vi-VN')} VND
-                          else 
-                            span 0 VND
-                      .col-12
-                        p Phí vận chuyển : 
-                          span #{ order.deliveryFee.toLocaleString('vi-VN')} VND
-                      .col-12
-                        p Tổng tiền : 
-                          span #{order.totalPrice.toLocaleString('vi-VN')} VND
-                      .col-12
-                        p Trạng thái : 
-                          span.status(class=`status-${order.status}`) #{order.statusText}
-                      .col-12
-                        button(class="btn btn-danger" data-id=order.id button-order-delete) Hủy đơn hàng
-    
+          if(orders.length>0)
+            
+            each order in orders
+              .row.mt-4
+                .col
+                  .card
+                    .card-body
+                      .row
+                        .col-12
+                            p Thời gian đặt : 
+                              span #{moment(order.createdAt).format('DD/MM/YYYY HH:mm:ss')}
+                        .col-12
+                          p Họ và tên : 
+                            span #{order.userInfo.fullName}
+                        .col-12
+                          p Số điện thoại : 
+                            span #{order.userInfo.phone}
+                        .col-12
+                          p Địa chỉ : 
+                            span #{order.userInfo.address}
+                        .col-12
+                          p Phương thức thanh toán : 
+                            span
+                              | Thanh toán khi nhận hàng
+                        .col-12
+                          p Đơn hàng của bạn : 
+                            span #{order.orderString}
+                        .col-12
+                          p Voucher giảm giá : 
+                            if(order.discountVoucher)
+                              span #{order.discountVoucher.toLocaleString('vi-VN')} VND
+                            else 
+                              span 0 VND
+                        .col-12
+                          p Phí vận chuyển : 
+                            span #{ order.deliveryFee.toLocaleString('vi-VN')} VND
+                        .col-12
+                          p Tổng tiền : 
+                            span #{order.totalPrice.toLocaleString('vi-VN')} VND
+                        .col-12
+                          p Trạng thái : 
+                            span.status(class=`status-${order.status}`) #{order.statusText}
+                        .col-12
+                          button(class="btn btn-danger" data-id=order.id button-order-delete) Hủy đơn hàng
+          else
+            .empty-orders
+              i.bi.bi-bag-x
+              h3 Bạn chưa có đơn hàng nào
+              p Hãy khám phá các sản phẩm của chúng tôi và đặt hàng ngay!
+              a.shop-now-btn(href="/products")
+                i.bi.bi-cart-plus
+                |  Mua sắm ngay
                     
     form(action="", method="post" id="form-delete-order" data-path=`/user/order/delete`) 
     
