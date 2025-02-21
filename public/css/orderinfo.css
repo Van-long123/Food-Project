@@ -19,194 +19,6 @@ body {
     position: relative;
     top: 10px;
 }
-
-/* Card styles */
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card-1 {
-    width: 100%;
-    max-width: 1000px;
-    padding: 20px;
-}
-
-.card-header {
-    border-bottom: 1px solid #eee;
-    padding: 1.5rem;
-}
-
-.card-body {
-    padding: 2rem;
-}
-
-/* Text styles */
-.color-1 {
-    color: #2d3436;
-}
-
-.change-color {
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
-/* Order details */
-.card p {
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    color: #636e72;
-}
-
-.card p span {
-    color: #2d3436;
-    font-weight: 500;
-    margin-left: 0.5rem;
-}
-
-/* Status styles */
-.status {
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.status-pending {
-    background-color: #ffeaa7;
-    color: #fdcb6e;
-}
-
-.status-processing {
-    background-color: #81ecec;
-    color: #00cec9;
-}
-
-.status-completed {
-    background-color: #55efc4;
-    color: #00b894;
-}
-
-.status-cancelled {
-    background-color: #ff7675;
-    color: #d63031;
-}
-
-/* Button styles */
-.btn-danger {
-    background-color: #ff7675;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.btn-danger:hover {
-    background-color: #d63031;
-    transform: translateY(-2px);
-}
-
-/* Alert styles */
-.alert {
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    position: relative;
-}
-
-.alert-success {
-    background-color: #55efc4;
-    color: #00b894;
-    border: 1px solid #00b894;
-}
-
-.alert .fa-xmark {
-    position: absolute;
-    /* right: 1rem; */
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-}
-
-.alert .fa-xmark:hover {
-    opacity: 1;
-}
-
-/* Media queries */
-@media (max-width: 768px) {
-    .card-1 {
-        margin: 0 15px;
-    }
-
-    .card-header {
-        padding: 1rem;
-    }
-
-    .card-body {
-        padding: 1rem;
-    }
-
-    .info {
-        font-size: 1.2rem;
-    }
-}
-
-/* Responsive improvements */
-@media (max-width: 576px) {
-    .logo img {
-        height: 40px;
-    }
-
-    .info {
-        font-size: 1rem;
-    }
-
-    .card p {
-        font-size: 0.9rem;
-    }
-}
-
-/* Print styles */
-@media print {
-
-    .btn-danger,
-    form#form-delete-order {
-        display: none;
-    }
-
-    .card {
-        box-shadow: none;
-    }
-
-    .status {
-        print-color-adjust: exact;
-        -webkit-print-color-adjust: exact;
-    }
-}
-
-.status-Initit {
-    background-color: #b0b0b0;
-    /* Xám nhạt */
-}
-
-.status-Confirm {
-    background-color: #4db8ff;
-    /* Xanh dương nhạt */
-}
-
-.status-Shipped {
-    background-color: #ffcc00;
-    /* Vàng */
-}
-
-.status-Delivered {
-    background-color: #66cc66;
-    /* Xanh lá cây */
-}
-
 /* empty order  */
 .empty-orders {
     text-align: center;
@@ -247,3 +59,129 @@ body {
     font-size: 20px;
 }
 /* empty order  */
+
+
+/* order new  */
+.nav-tabs {
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+  }
+
+  .nav-tabs .nav-link {
+    border: none;
+    color: #666 !important;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .nav-tabs .nav-link:hover {
+    color: #746bd8 !important;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: #746bd8 !important;
+    font-weight: 600 !important;
+    border: none;
+  }
+  .nav-tabs .nav-link:focus{
+    outline: none;
+    border: none;
+  }
+  .nav-tabs .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #4435F1 ;
+  }
+
+  .shop-actions a {
+    text-decoration: none;
+    margin-right: 10px;
+    color: #666;
+  }
+
+  .btn-message {
+    color: #ff4d4f;
+    border: 1px solid #ff4d4f;
+    background: white;
+  }
+
+  .product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .price {
+    color: #ff4d4f;
+    font-weight: bold;
+  }
+
+  .status {
+    color: #ff4d4f;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .action-buttons {
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 15px;
+  }
+
+  .order-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .shop-info {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .product-details {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .product-details:last-of-type {
+    border-bottom: none;
+  }
+
+  .shop-name {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .shop-icon {
+    width: 20px;
+    height: 20px;
+    background-color: #666;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
+
+
+
+  .quantity {
+    color: #888;
+    font-size: 0.9em;
+  }
+
+  .total-label {
+    color: #666;
+  }
+/* order new  */
