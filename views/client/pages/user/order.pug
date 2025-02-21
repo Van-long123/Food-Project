@@ -14,20 +14,11 @@ html(lang="en")
   body
     include ../../partials/header
    
-    .container.mt-3
+    .container.order.mt-3
       ul.nav.nav-tabs.mb-4
+        each item in fillterStatus
           li.nav-item
-              a.nav-link.active(href="#") Tất cả
-          li.nav-item
-              a.nav-link(href="#") Chờ xác nhận
-          li.nav-item
-              a.nav-link(href="#") Đã xác nhận
-          li.nav-item
-              a.nav-link(href="#") Đang giao hàng
-          li.nav-item
-              a.nav-link(href="#") Huỷ đơn hàng
-          li.nav-item
-              a.nav-link(href="#") Đơn hàng thành công
+            a.nav-link(href=`javascript:;` class=item.class button-status=item.status) #{item.name}
 
 
       //- Order 1
@@ -44,28 +35,31 @@ html(lang="en")
                   //- a.btn.btn-light.btn-sm(href="#") Xem Shop
               .ml-auto
                   span.status #{order.statusText}
-            .product-details.d-flex.align-items-center
-                img.product-image.mr-3(src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1728139664/xc6hmwadjcbbbnegopua.jpg", alt="Product")
-                .flex-grow-1
-                    h6 Khẩu trang 5d xám, Khẩu trang 5d xịn xò, 100 chiếc giá sale, chuyên khẩu trang 5d
-                    p.quantity.mb-0 Số lượng: 2
-                .price 90.000 đ
+            each product,index in order.products
+              .product-details.d-flex.align-items-center
+                  img.product-image.mr-3(src=product.productInfo.thumbnail, alt=product.productInfo.title)
+                  .flex-grow-1
+                      h6 #{product.productInfo.title}
+                      p.quantity.mb-0 Số lượng: #{order.products[index].quantity}
+                  .price #{(order.products[index].quantity*order.products[index].priceNew).toLocaleString('vi-VN')}đ
             .action-buttons
                 .total-price.mb-3
                     span.total-label.mr-1 Thành tiền:
-                    span.price 205.000 đ
+                    span.price #{order.totalPrice.toLocaleString('vi-VN')}đ
                 button.btn.btn-success.mr-2 MUA LẠI
-                button.btn.btn-outline-danger HỦY ĐƠN HÀNG
+                if(order.deleted!=true)
+                  button.btn.btn-outline-danger(data-id=order.id button-order-delete) HỦY ĐƠN HÀNG
       else
         .empty-orders
           i.bi.bi-bag-x
           h3 Bạn chưa có đơn hàng nào
-          p Hãy khám phá các sản phẩm của chúng tôi và đặt hàng ngay!
-          a.shop-now-btn(href="/products")
-            i.bi.bi-cart-plus
-            |  Mua sắm ngay
+          //- if()
+            p Hãy khám phá các sản phẩm của chúng tôi và đặt hàng ngay!
+            a.shop-now-btn(href="/products")
+              i.bi.bi-cart-plus
+              |  Mua sắm ngay
       
 
-                    
+    div(id="notification" class="hidden" data-time=5000)               
     form(action="", method="post" id="form-delete-order" data-path=`/user/order/delete`) 
     script(src="/js/user.js")

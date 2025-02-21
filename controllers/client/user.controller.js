@@ -9,6 +9,7 @@ const productsHelper=require('../../helpers/product')
 const Product = require('../../model/product.model')
 const OrderInfo = require('../../model/order-info.model')
 const Voucher = require('../../model/voucher.model')
+const fillterStatusOrderHelper=require('../../helpers/fillterStatusOrderHelper')
 module.exports.login=(req,res)=>{
     res.render('client/pages/user/login',{title:"Đăng nhập tài khoản"})
 }
@@ -156,26 +157,37 @@ module.exports.resetPasswordPost=async(req,res)=>{
 }
 module.exports.order=async (req,res)=>{
     // status text 
+    const cartId=req.cookies.cartId;
+    let find={
+        cartId:cartId,deleted:false
+    }
     const statusMap = {
-        "Initit": "Đang xử lý",
+        "Initit": "Chờ xác nhận",
         "Confirm": "Đã xác nhận",
-        "Shipped": "Đang vận chuyển",
-        "Delivered": "Đã giao",
+        "Shipped": "Đang giao hàng",
+        "Delivered": "Đơn hàng thành công",
     };
+    let fillterStatus=fillterStatusOrderHelper(req.query)
+    if(req.query.status&&req.query.status!="Deleted"){
+        find.status=req.query.status
+    }
+    else if(req.query.status&&req.query.status=="Deleted"){
+        find.deleted=true
+    }
 // status text
     // làm thanh toán xong làm lại order 
     try {
-        const cartId=req.cookies.cartId;
-        const orders=await Order.find({cartId:cartId,deleted:false}).sort({'createdAt':'desc'})
+        const orders=await Order.find(find).sort({'createdAt':'desc'})
         for (const order of orders) {
             order.products=productsHelper.priceNewproduct(order.products)
-            let orderString = "";
+
+            // let orderString = "";
             for (const product of order.products) {
-                const productInfo=await Product.findOne({_id:product.product_id}).select('title')
+                const productInfo=await Product.findOne({_id:product.product_id})
                 product.productInfo=productInfo
-                orderString += `${product.productInfo.title} (${product.priceNew} * ${product.quantity}), `;
+                // orderString += `${product.productInfo.title} (${product.priceNew} * ${product.quantity}), `;
             }
-            order.orderString=orderString.slice(0, -2)
+            // order.orderString=orderString.slice(0, -2)
             // order.orderString=orderString.substring(0, orderString.length - 2);
             
             order.totalPrice=order.products.reduce((sum,item)=>{
@@ -211,7 +223,8 @@ module.exports.order=async (req,res)=>{
         }
         res.render('client/pages/user/order',{
             title:'Thông tin đơn hàng',
-            orders:orders
+            orders:orders,
+            fillterStatus:fillterStatus
         })
     } catch (error) {
         req.flash('error','Không có đơn hàng')
@@ -220,10 +233,19 @@ module.exports.order=async (req,res)=>{
 }
 
 module.exports.orderDelete=async (req, res) => {
-    const id=req.params.id
-    await Order.updateOne({_id:id},{deleted:true})
-    req.flash('success', 'Đã hủy đơn hàng thành công');
-    res.redirect('back');
+    try {
+        const id=req.params.id
+        await Order.updateOne({_id:id},{deleted:true})
+        return res.json({
+            code:200,
+            message:"Đã hủy đơn hàng thành công!"
+        })
+    } catch (error) {
+        res.json({
+            code:500,
+            message: 'Lỗi server!'
+        })
+    }
 }
 module.exports.detail=async (req, res) => {
     if(!res.locals.user){

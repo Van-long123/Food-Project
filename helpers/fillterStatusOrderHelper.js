@@ -6,7 +6,7 @@ module.exports=(query)=>{
             class:""
         },
         {
-            name:"Đang chờ xử lý",
+            name:"Chờ xác nhận",
             status:"Initit",
             class:""
         },
@@ -16,14 +16,19 @@ module.exports=(query)=>{
             class:""
         },
         {
-            name:"Đang vận chuyển",
+            name:"Đang giao hàng",
             status:"Shipped",
+            class:""
+        },
+        {
+            name:"Đơn hàng thành công",
+            status:"Delivered",
             class:""
         }
         ,
         {
-            name:"Đã giao",
-            status:"Delivered",
+            name:"Hủy đơn hàng",
+            status:"Deleted",
             class:""
         }
     ]

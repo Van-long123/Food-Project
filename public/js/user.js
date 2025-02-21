@@ -1,21 +1,4 @@
-const buttonOrderDelete=document.querySelectorAll('[button-order-delete]')
-if(buttonOrderDelete.length > 0){
-    const formDeleteItem=document.querySelector('#form-delete-order')
-    const path=formDeleteItem.getAttribute('data-path')
-    buttonOrderDelete.forEach(btn=>{
-        btn.addEventListener('click',e=>{
-            console.log(btn)
-            const isConfirm=confirm('Bạn có chắc muốn hủy đơn hàng')
-            if(isConfirm){
-                const id=btn.getAttribute('data-id')
-                const action=`${path}/${id}?_method=DELETE`;
-                formDeleteItem.action=action
-                formDeleteItem.submit()
-            }
 
-        })
-    })
-}
 
 // Show alert 
 const showAlert=document.querySelector('[show-alert1]');
@@ -224,3 +207,70 @@ if(buttonForgotPass){
 }
 // forgot-password 
 
+// button-status
+const buttonStatus=document.querySelectorAll('[button-status]')
+if(buttonStatus.length>0){
+    let url=new URL(window.location.href)
+    buttonStatus.forEach(btn=>{
+        btn.addEventListener('click',e=>{
+            const status=btn.getAttribute('button-status')
+            if(status){
+                url.searchParams.set('status',status)
+            }else{
+                url.searchParams.delete('status')
+            }
+            window.location.href=url.href
+        })
+    })
+}
+// button-status
+
+// delete-order
+const buttonOrderDelete=document.querySelectorAll('[button-order-delete]')
+if(buttonOrderDelete.length > 0){
+    buttonOrderDelete.forEach(btn=>{
+        btn.addEventListener('click',e=>{
+            const isConfirm=confirm('Bạn có chắc muốn hủy đơn hàng')
+            if(isConfirm){
+                const id=btn.getAttribute('data-id')
+                const action=`/user/order/delete/${id}`;
+                fetch(action,{
+                    method:"DELETE"
+                })
+                    .then(res=>res.json())
+                    .then(data=>{
+                        if(data.code==200){
+                            notification(data.message)
+                            const order=document.querySelector('.order')
+                            const orderCard=document.querySelector(`[data-id="${id}"]`).closest('.order-card')
+                            console.log(orderCard)
+                            console.log(order)
+                            order.removeChild(orderCard)
+                        }
+                        else{
+                            notification(data.message, '#FF4C4C')
+                        }
+                    })
+            }
+
+        })
+    })
+}
+// delete-order
+function notification(msg, background) {
+    const notification = document.getElementById('notification');
+    if (background) {
+        notification.style.backgroundColor = background;
+    } else {
+        notification.style.backgroundColor = '#229d45';
+    }
+    const timeout = notification.getAttribute('data-time')
+    notification.classList.remove('hidden')
+    notification.classList.add('show')
+
+    notification.textContent = msg
+    setTimeout(() => {
+        notification.classList.remove('show')
+        notification.classList.add('hidden')
+    }, timeout);
+}

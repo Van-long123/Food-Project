@@ -185,3 +185,30 @@ body {
     color: #666;
   }
 /* order new  */
+/* notification */
+#notification {
+    display: block;
+    position: fixed;
+    bottom: 90px;
+    right: -300px;
+    /* Start offscreen */
+    background-color: #229d45;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: right 0.4s ease, transform 0.4s ease;
+    z-index: 1000000000;
+}
+
+#notification.hidden {
+    transform: translateX(100%);
+}
+
+#notification.show {
+    right: 80px;
+    transform: translateX(0);
+}
+
+/* notification */
