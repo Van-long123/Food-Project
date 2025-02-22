@@ -274,3 +274,48 @@ function notification(msg, background) {
         notification.classList.add('hidden')
     }, timeout);
 }
+
+// buy back
+const buyBack=document.querySelectorAll('.buy-back')
+if(buyBack.length>0){
+    buyBack.forEach(btn=>{
+        btn.addEventListener('click',e=>{
+            const orderCart=btn.closest('.order-card')
+            const productDetails=orderCart.querySelectorAll('.product-details')
+            const data=[]
+            productDetails.forEach(product=>{
+                const quantity=parseInt(product.querySelector('.quantity').innerText.replace(/\D/g,""))
+                const productId=product.getAttribute('product-id')
+                
+                data.push({
+                    quantity:quantity,
+                    productId:productId,
+                })
+                
+            })
+            fetch('/order/buy-back',{
+                method: 'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then(res=>res.json())
+                .then(data=>{
+                    if(data.code==200){
+                        if(data.outOfStockProducts.length>0){
+                            console.log(data.outOfStockProducts)
+                            alert(
+                                `Một số sản phẩm đã hết hàng:\n- ${data.outOfStockProducts.join("\n- ")}\nNhững sản phẩm còn lại đã được thêm vào giỏ hàng!`
+                            )
+                        }
+                        window.location.href='/order/cart-info'
+                    }
+                    else{
+                        alert("Có lỗi xảy ra khi thêm vào giỏ hàng!");
+                    }
+                })
+        })
+    })
+}
+// buy back

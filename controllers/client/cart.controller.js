@@ -531,3 +531,61 @@ module.exports.info=async (req,res)=>{
         res.redirect('/')
     }
 }
+
+module.exports.buyBack=async(req,res)=>{
+    try {
+        const data=req.body
+        let outOfStockProducts=[]
+        for (const item of data) {
+            const existProduct= await Product.findOne({
+                _id:item.productId
+            })
+            if(!existProduct||existProduct.stock<item.quantity){
+                outOfStockProducts.push(item.title)
+            }else{
+                const cartId=req.cookies.cartId
+                const cart=await Cart.findOne({_id:cartId})
+                const existProductInCart=cart.products.find(product=>{
+                    return product.product_id==item.productId
+                })
+                if(!existProductInCart){
+                    await Cart.updateOne({
+                        _id:cartId
+                    },{
+                        $push:{products:{
+                            product_id:item.productId,
+                            quantity:item.quantity
+                        }}
+                    })
+                }
+                else{
+                    if(existProduct.stock<existProductInCart.quantity+item.quantity){
+                        outOfStockProducts.push(existProduct.title)
+                    }else{
+                        await Cart.updateOne({
+                            _id: cartId,
+                            'products.product_id':item.productId
+                        },
+                        {
+                            $inc:{
+                                'products.$.quantity':item.quantity
+                            }
+                        })
+                    }
+                    
+                }
+            }
+        }
+        console.log(outOfStockProducts)
+        return res.json({
+            code:200,
+            message: "Thêm vào giỏ hàng thành công!",
+            outOfStockProducts
+        })
+    } catch (error) {
+        return res.json({
+            code:500,
+            message: "Lỗi server!"
+        })
+    }
+}

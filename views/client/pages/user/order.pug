@@ -36,7 +36,7 @@ html(lang="en")
               .ml-auto
                   span.status #{order.statusText}
             each product,index in order.products
-              .product-details.d-flex.align-items-center
+              .product-details.d-flex.align-items-center(product-id=product.productInfo.id)
                   img.product-image.mr-3(src=product.productInfo.thumbnail, alt=product.productInfo.title)
                   .flex-grow-1
                       h6 #{product.productInfo.title}
@@ -46,13 +46,14 @@ html(lang="en")
                 .total-price.mb-3
                     span.total-label.mr-1 Thành tiền:
                     span.price #{order.totalPrice.toLocaleString('vi-VN')}đ
-                button.btn.btn-success.mr-2 MUA LẠI
-                if(order.deleted!=true)
-                  button.btn.btn-outline-danger(data-id=order.id button-order-delete) HỦY ĐƠN HÀNG
+                button.buy-back.btn.btn-success.mr-2 MUA LẠI
+                if(order.deleted!=true )
+                  if(order.status!='Delivered') 
+                    button.btn.btn-outline-danger(data-id=order.id button-order-delete) HỦY ĐƠN HÀNG
       else
         .empty-orders
           i.bi.bi-bag-x
-          h3 Bạn chưa có đơn hàng nào
+          h3 Không tìm thấy đơn hàng nào
           //- if()
             p Hãy khám phá các sản phẩm của chúng tôi và đặt hàng ngay!
             a.shop-now-btn(href="/products")

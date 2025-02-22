@@ -12,4 +12,7 @@ router.post('/checkPay', controller.checkPay)
 
 router.post('/add', controller.add)
 router.post('/delete', controller.delete)
+
+router.post('/buy-back', controller.buyBack)
+
 module.exports=router
