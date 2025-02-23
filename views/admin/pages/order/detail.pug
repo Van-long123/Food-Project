@@ -1,0 +1,19 @@
+extend ../../layouts/default
+include ../../mixins/alert.pug
+include ../../mixins/moment.pug
+block main
+    if (order.userInfo.fullName) 
+        h1(class="mb-4") #{order.userInfo.fullName}
+    if (order.userInfo.phone) 
+        div(class="mb-4") Số điện thoại: <b>#{order.userInfo.phone}</b>
+    if (order.userInfo.address) 
+        div(class="mb-4") Địa chỉ: <b>#{order.userInfo.address}</b>
+    if (order.nameProduct) 
+        div(class="mb-4") Tên sản phẩm: <b>#{order.nameProduct}</b>
+    if (order.status)
+        div(class="mb-4") Trạng thái: <b>#{order.status}</b>
+    if (order.createdAt)
+        div(class="mb-4") Thời gian đặt: 
+            b 
+                +formatDateTime(order.createdAt)
+    script(src="/admin/js/order.js")

@@ -41,7 +41,7 @@ block main
                             th STT
                             th Họ và tên
                             th Số điện thoại
-                            th Địa chỉ
+                            //- th Địa chỉ
                             th Tên sản phẩm
                             th Trạng thái
                             th Thời gian đặt
@@ -56,7 +56,7 @@ block main
                                 td #{pagination.limitItems*(pagination.currentPage-1)+(index +1)}
                                 td #{item.userInfo.fullName}
                                 td #{item.userInfo.phone}
-                                td #{item.userInfo.address}
+                                //- td #{item.userInfo.address}
                                 td #{item.nameProduct}
                                 td 
                                     if(role.permissions.includes("orders_edit"))
@@ -97,8 +97,6 @@ block main
                                         +formatDateTime(updatedBy.updatedAt)
                                 td 
                                     a(href=`${prefixAdmin}/orders/detail/${item.id}` class="btn btn-secondary btn-sm") Chi tiết
-                                    if(role.permissions.includes("orders_edit"))
-                                        a(href=`${prefixAdmin}/orders/edit/${item.id}` class="btn btn-warning  btn-sm ml-1") Sửa
                                     if(role.permissions.includes("orders_delete"))
                                         button(
                                             class="btn btn-danger btn-sm ml-1"
