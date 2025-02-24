@@ -274,18 +274,32 @@ module.exports.detail=async (req, res) => {
     })
 }
 module.exports.updateProfile=async (req, res) => {
-    if(!res.locals.user){
-        res.redirect('/user/login')
+    try {
+        if(!res.locals.user){
+            res.redirect('/user/login')
+        }
+        const emailExists=await User.findOne({_id:{$ne:res.locals.user.id},email:req.body.email,typeLogin:res.locals.user.typeLogin,deleted:false})
+        if(emailExists){
+            res.json({
+                code:400,
+                message:`Email đã tồn tại.`
+            })
+            return;
+        }
+        else{
+            await User.updateOne({_id:res.locals.user.id},req.body)
+        }
+        console.log(req.body)
+        res.json({
+            code:200,
+            message:`Cập nhật thành công.`,
+            image:req.body.avatar
+        })
+    } catch (error) {
+        res.json({
+            code:500,
+            message:'Có lỗi xảy ra, vui lòng thử lại.'
+        })
     }
-    const emailExists=await User.findOne({_id:{$ne:res.locals.user.id},email:req.body.email,typeLogin:res.locals.user.typeLogin,deleted:false})
-    if(emailExists){
-        req.flash('error', `Email ${req.body.email} đã tồn tại`);
-        res.redirect(`back`)
-        return;
-    }
-    else{
-        await User.updateOne({_id:res.locals.user.id},req.body)
-        req.flash('success', `Cập nhật thành công`);
-    }
-    res.redirect('/user/detail') 
+     
 }

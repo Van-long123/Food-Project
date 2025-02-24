@@ -109,7 +109,7 @@ uploadImageInput.addEventListener('change',e=>{
 })
 const profileForm = document.querySelector('.profileForm')
 if (profileForm) {
-    profileForm.addEventListener('submit', e => {
+    profileForm.addEventListener('submit', async e => {
         let checkInfo=true;
         e.preventDefault();
         const fullname = e.target.elements.fullname.value;
@@ -142,7 +142,38 @@ if (profileForm) {
             document.querySelector('#email-error').style.display='block'
         }
         if(checkInfo){
-            profileForm.submit()
+            // let file= e.target.elements.avatar.files[0]
+            // if (file) {
+            //     const arrayBuffer = await file.arrayBuffer();
+            //     const buffer = Buffer.from(new Uint8Array(arrayBuffer)); // Chuyển Uint8Array thành Buffer
+        
+            //     console.log(buffer); // In ra <Buffer ff d8 ff e0 ...>
+            // }
+            // const formData = new FormData(e.target);
+            // for (let [key, value] of formData.entries()) {
+            //     console.log(key, value);
+            // }
+            // console.log(...formData);
+            // console.log(formData);
+            const formData = new FormData(e.target)
+            try {
+                const response   = await fetch('/user/update-profile',{
+                    method:"PATCH",
+                    body: formData
+                })
+                const result=await response .json()
+                if(result.code==200){
+                    const profileAvatar=document.querySelector('.profile-avatar img')
+                    profileAvatar.src=result.image
+                    notification(result.message)
+                }
+                else{
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            }
+            // profileForm.submit()
         }
         // const formData = new FormData();
         // const fileInput = e.target.avatar.files[0]; 
