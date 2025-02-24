@@ -164,7 +164,9 @@ if (profileForm) {
                 const result=await response .json()
                 if(result.code==200){
                     const profileAvatar=document.querySelector('.profile-avatar img')
-                    profileAvatar.src=result.image
+                    if(result.image){
+                        profileAvatar.src=result.image
+                    }
                     notification(result.message)
                 }
                 else{
