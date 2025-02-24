@@ -7,8 +7,12 @@ block main
             div.row
                 div.col-md-3.sidebar
                     div.d-flex.align-items-center
-                        div.profile-icon
-                            i.fas.fa-user
+                        if(user.avatar)
+                            div.profile-avatar
+                                img(src=user.avatar, alt=user.fullname)
+                        else
+                            div.profile-icon
+                                i.fas.fa-user
                         div.ms-2
                             h6.mb-0 #{user.fullname}
                             small.text-muted
