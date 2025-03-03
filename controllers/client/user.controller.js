@@ -169,7 +169,9 @@ module.exports.order=async (req,res)=>{
     };
     let fillterStatus=fillterStatusOrderHelper(req.query)
     if(req.query.status&&req.query.status!="Deleted"){
-        find.status=req.query.status
+        if(req.query.status!=1){
+            find.status=req.query.status
+        }
     }
     else if(req.query.status&&req.query.status=="Deleted"){
         find.deleted=true

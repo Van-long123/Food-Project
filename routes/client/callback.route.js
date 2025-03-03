@@ -60,6 +60,8 @@ Routes.post('/', async(req, res) => {
                 }
                 const order=new Order(order_info)
                 await order.save()
+                console.log(order)
+
             } catch (error) {
                 console.error('JSON Parse Error:', jsonError.message);
                 result.return_code = 0;

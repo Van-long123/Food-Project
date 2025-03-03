@@ -37,7 +37,12 @@ module.exports=(query)=>{
         const element=fillterStatus.find(item=>{
             return item.status==query.status
         })
-        element.class='active'
+        if(!element){
+            fillterStatus[0].class='active'
+        }
+        else{
+            element.class='active'
+        }
     }
     else{
         const element=fillterStatus.find(item=>{
