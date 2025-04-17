@@ -83,18 +83,18 @@ module.exports.checkPay=async (req,res)=>{
     }
     if(existsProductInCart){
         
-        if(product.stock<existsProductInCart.quantity+1){
-            res.json({
-                error:'error',
-            })
-            return;
-        }
-        if(product.stock<existsProductInCart.quantity+quantity){
-            res.json({
-                error:'Số lượng bạn chọn quá hàng trong kho',
-            })
-            return;
-        }
+        // if(product.stock<existsProductInCart.quantity+1){
+        //     res.json({
+        //         error:'error',
+        //     })
+        //     return;
+        // }
+        // if(product.stock<existsProductInCart.quantity+quantity){
+        //     res.json({
+        //         error:'Số lượng bạn chọn quá hàng trong kho',
+        //     })
+        //     return;
+        // }
     }
     return res.json(response)
 }

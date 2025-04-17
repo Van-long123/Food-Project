@@ -19,7 +19,10 @@ module.exports.index=async (req,res)=>{
     const objectSearch=searchHelper(req.query)
     let keyword=objectSearch.keyword
     if(objectSearch.regex){
-        find.title=objectSearch.regex
+        find['$or']=[
+            {title:objectSearch.regex},
+            {slug:objectSearch.slugRegex}
+        ]
     }
     //search
     

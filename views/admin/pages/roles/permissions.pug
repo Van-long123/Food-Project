@@ -21,12 +21,19 @@ block main
                         th Tính năng
                             each record in records
                                 th(class="text-center") #{record.title}
+                    
                 tbody
                     tr(data-name="id" class="d-none")
                         td
                         each record in records 
                             td(class="text-center")
                                 input(type="text" value=record.id)
+                    tr(data-name="select_all")
+                        td 
+                            b Tất cả
+                        each record in records 
+                            td(class="text-center")
+                                input(type="checkbox")
                     tr
                         td(colspan="5")
                             b Danh mục sản phẩm

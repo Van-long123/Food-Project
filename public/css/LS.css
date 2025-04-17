@@ -1,3 +1,6 @@
+body{
+    height: 100vh !important;
+}
 .Login{
     position: relative;
     top: -70px;
@@ -123,7 +126,7 @@
   /* ----------------------------Bắt đầu form đăng ký------------------------ */
 .Register{
     position: relative;
-    top: -25px;
+    top: -47px;
 }
 #formsig{
     display: flex;

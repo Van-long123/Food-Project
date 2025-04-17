@@ -38,7 +38,7 @@ module.exports.index= async (req,res)=>{
     })
     const records=await Article.find(find).sort(sort)
     .limit(objectPagination.limitItems)
-    .skip(objectPagination.skip);
+    .skip(objectPagination.skip).select('-content');
     
     for (const record of records) {
         const user=await Account.findOne({
@@ -249,6 +249,7 @@ module.exports.editPatch=async (req,res)=>{
         else{
             req.body.position=parseInt(req.body.position)
         }
+        
         const updatedBy={
             account_id:res.locals.user.id,
             updatedAt:Date.now()
