@@ -4,10 +4,11 @@
     box-sizing: border-box;
 }
 nav.navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 10000000 !important;
     background-color: white; 
+    width: 100%;
 }
 #logo img{
     margin-bottom: 10px;
