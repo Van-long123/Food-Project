@@ -58,7 +58,7 @@ Một hệ thống đặt hàng thực phẩm trực tuyến hiện đại, giao
 
 ---
 
-## 🚀 Demo (tuỳ chọn)
+## 🚀 Demo 
 https://food-project-nu-opal.vercel.app/
 
 ## ⚙️ Hướng dẫn cài đặt (tuỳ chọn)
