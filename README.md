@@ -1,13 +1,76 @@
-Các tính năng chính:
-- Ứng dụng web để quản lý đơn đặt hàng thực phẩm trực tuyến.
-- Đã phát triển trang chủ phản hồi hiển thị các món ăn nổi bật và chương trình khuyến mãi.
-- Đã triển khai hệ thống xác thực: đăng ký, đăng nhập, quên mật khẩu và đổi mật khẩu.
-- Phát triển tính năng tìm kiếm món ăn theo tên với hiệu suất tối ưu.
-- Đã thiết kế trang chi tiết món ăn hiển thị thông tin, thành phần, giá cả và đánh giá của người dùng.
-- Đã xây dựng giỏ hàng với tính năng tính giá động và tích hợp thanh toán (API).
-- Đã tạo hệ thống quản lý quản trị cho các món ăn, danh mục, bài viết, đơn hàng và vai trò người dùng.
-- Tích hợp tính năng sử dụng voucher, mã giảm giá giúp khách hàng tiết kiệm chi phí.
-- Tích hợp Node.js và MongoDB để xử lý dữ liệu và lưu trữ dữ liệu ở phía sau.
+# 🍽️ Ứng Dụng Web Đặt Món Ăn Trực Tuyến
+
+Một hệ thống đặt hàng thực phẩm trực tuyến hiện đại, giao diện thân thiện và phản hồi tốt trên mọi thiết bị. Ứng dụng không chỉ mang lại trải nghiệm mua sắm tiện lợi cho người dùng, mà còn cung cấp công cụ quản lý mạnh mẽ cho quản trị viên.
+
+---
+
+## 🌟 Tính Năng Nổi Bật
+
+### ✅ Giao diện trang chủ phản hồi
+- Hiển thị **các món ăn nổi bật**
+- **Chương trình khuyến mãi**
+- Thiết kế đẹp, dễ dùng, tương thích trên mọi thiết bị
+
+### ✅ Hệ thống xác thực người dùng
+- Đăng ký tài khoản
+- Đăng nhập
+- Quên mật khẩu và đặt lại mật khẩu
+- Đổi mật khẩu
+- Bảo mật và xác thực an toàn
+
+### ✅ Tìm kiếm món ăn theo tên
+- Tối ưu hiệu suất
+- Kết quả nhanh chóng, chính xác
+
+### ✅ Trang chi tiết món ăn
+- Tên & mô tả
+- Thành phần nguyên liệu
+- Giá cả
+- Đánh giá và nhận xét của người dùng
+
+### ✅ Giỏ hàng thông minh
+- Cập nhật giá động khi thêm/xóa món
+- Tích hợp với cổng thanh toán qua **API**
+- Giao diện giỏ hàng trực quan, dễ sử dụng
+
+### ✅ Hệ thống quản trị dành cho Admin
+- Quản lý món ăn, danh mục
+- Quản lý bài viết/blog
+- Xử lý đơn hàng
+- Phân quyền người dùng (quản trị viên, khách hàng,...)
+
+### ✅ Hỗ trợ mã giảm giá và voucher
+- Cho phép nhập mã khuyến mãi
+- Tự động áp dụng giảm giá vào tổng đơn hàng
+
+---
+
+## 💻 Công Nghệ Sử Dụng
+- **Backend**: Node.js (Express.js)
+- **Cơ sở dữ liệu**: MongoDB
+- **API thanh toán**: Tích hợp sẵn (có thể là VNPay)
+
+---
+
+## 📌 Ghi chú
+
+> Đây là một dự án thực tế mô phỏng hệ thống thương mại điện tử chuyên về đặt món ăn trực tuyến. Có thể mở rộng cho nhà hàng, quán ăn hoặc các dịch vụ giao đồ ăn.
+
+---
+
+## 🚀 Demo (tuỳ chọn)
+https://food-project-nu-opal.vercel.app/
+
+## ⚙️ Hướng dẫn cài đặt (tuỳ chọn)
+```bash
+# Clone repo
+git clone https://github.com/your-username/food-order-app.git
+
+# Cài đặt 
+cd backend
+npm install
+npm start
+
 
 Tài khoản user,admin:
 - tài khoản: phamlong123np@gmail.com
