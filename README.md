@@ -64,7 +64,7 @@ https://food-project-nu-opal.vercel.app/
 ## ⚙️ Hướng dẫn cài đặt (tuỳ chọn)
 ```bash
 # Clone repo
-git clone https://github.com/your-username/food-order-app.git
+https://github.com/Van-long123/Food-Project.git
 
 # Cài đặt 
 cd backend
