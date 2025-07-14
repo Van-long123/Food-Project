@@ -2965,6 +2965,7 @@ button.close:focus {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
     transition: all 0.3s ease;
 }
