@@ -13,7 +13,7 @@ Một hệ thống đặt hàng thực phẩm trực tuyến hiện đại, giao
 
 ### ✅ Hệ thống xác thực người dùng
 - Đăng ký tài khoản
-- Đăng nhập
+- Đăng nhập bằng email/mật khẩu hoặc thông qua Google
 - Quên mật khẩu và đặt lại mật khẩu
 - Đổi mật khẩu
 - Bảo mật và xác thực an toàn
